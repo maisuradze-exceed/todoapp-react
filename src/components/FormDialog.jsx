@@ -5,7 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Edit from '@material-ui/icons/Edit';
-import axios from 'axios';
 
 export default class extends Component {
   constructor(props) {
@@ -14,6 +13,7 @@ export default class extends Component {
       open: false,
       value: this.props.data.value,
       id: this.props.data._id,
+      save: this.props.save(),
     };
   }
 
@@ -27,18 +27,6 @@ export default class extends Component {
     this.setState({
       value: event.target.value,
     });
-  };
-
-  handleSave = (id) => {
-    axios
-      .patch(`https://exceed-react.herokuapp.com/list/single/${id}`, {
-        value: this.state.value,
-      })
-      .then(
-        this.setState({
-          open: false,
-        })
-      );
   };
 
   render() {
@@ -72,7 +60,12 @@ export default class extends Component {
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => this.handleSave(this.state.id)}
+              onClick={() => {
+                this.state.value.trim().length
+                  ? this.state.save(this.state.id, this.state.value)
+                  : this.setState({ value: this.props.data.value });
+                this.setState({ open: false });
+              }}
               color='primary'
             >
               Save

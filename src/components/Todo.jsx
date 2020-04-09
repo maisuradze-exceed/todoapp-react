@@ -12,6 +12,7 @@ class Todo extends Component {
       newTodo: '',
       allCompleted: false,
       todos: [],
+      open: false,
     };
   }
   componentDidMount = () => {
@@ -129,10 +130,19 @@ class Todo extends Component {
       );
   };
 
-  editToggle = () => {
-    this.setState({
-      open: !this.state.open,
-    });
+  handleSave = (id, value, open) => {
+    axios
+      .patch(`https://exceed-react.herokuapp.com/list/single/${id}`, {
+        value: value,
+      })
+      .then((res) =>
+        this.setState({
+          todos: res.data,
+          allCompleted: res.data.every(
+            (element) => element.isCompleted === true
+          ),
+        })
+      );
   };
 
   render() {
@@ -159,57 +169,7 @@ class Todo extends Component {
             </Button>
           </form>
         </div>
-        {this.state.todos.length ? (
-          <div className='buttons'>
-            {this.state.allCompleted ? (
-              <Button
-                variant='outlined'
-                className='btn'
-                size='large'
-                color='primary'
-                onClick={this.allCompleteHandler}
-              >
-                Uncomplete Tasks
-              </Button>
-            ) : (
-              <Button
-                variant='contained'
-                className='btn'
-                size='large'
-                color='primary'
-                onClick={this.allCompleteHandler}
-              >
-                Complete Tasks
-              </Button>
-            )}
-            {this.state.todos.some(
-              (element) => element.isCompleted === true
-            ) ? (
-              <Button
-                variant='contained'
-                className='btn'
-                size='large'
-                color='secondary'
-                onClick={this.allRemoveHandler}
-              >
-                Remove Completed Tasks
-              </Button>
-            ) : (
-              <Button
-                disabled
-                variant='contained'
-                className='btn'
-                size='large'
-                color='secondary'
-                onClick={this.allRemoveHandler}
-              >
-                Remove Completed Tasks
-              </Button>
-            )}
-          </div>
-        ) : (
-          <h1 className='nothing'>No Tasks...</h1>
-        )}
+
         <ul>
           {this.state.todos.map((element) => {
             return (
@@ -225,7 +185,7 @@ class Todo extends Component {
                   {element.value}
                 </span>
                 <div className='btn-div'>
-                  <FormDialog data={element} />
+                  <FormDialog data={element} save={() => this.handleSave} />
                   <Button
                     className='btn-del'
                     id={element._id}
@@ -241,6 +201,61 @@ class Todo extends Component {
             );
           })}
         </ul>
+        {this.state.todos.length ? (
+          <div className='buttons'>
+            <div>
+              {this.state.allCompleted ? (
+                <Button
+                  variant='outlined'
+                  className='btn'
+                  size='large'
+                  color='primary'
+                  onClick={this.allCompleteHandler}
+                >
+                  Uncomplete Tasks
+                </Button>
+              ) : (
+                <Button
+                  variant='contained'
+                  className='btn'
+                  size='large'
+                  color='primary'
+                  onClick={this.allCompleteHandler}
+                >
+                  Complete Tasks
+                </Button>
+              )}
+            </div>
+            <div className='margin-top'>
+              {this.state.todos.some(
+                (element) => element.isCompleted === true
+              ) ? (
+                <Button
+                  variant='contained'
+                  className='btn'
+                  size='large'
+                  color='secondary'
+                  onClick={this.allRemoveHandler}
+                >
+                  Remove Completed Tasks
+                </Button>
+              ) : (
+                <Button
+                  disabled
+                  variant='contained'
+                  className='btn'
+                  size='large'
+                  color='secondary'
+                  onClick={this.allRemoveHandler}
+                >
+                  Remove Completed Tasks
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <h1 className='nothing'>No Tasks...</h1>
+        )}
       </Container>
     );
   }
