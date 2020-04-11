@@ -1,264 +1,55 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, TextField, Container } from '@material-ui/core/';
+import { Button, Checkbox, Container } from '@material-ui/core/';
 import Delete from '@material-ui/icons/Delete';
 import FormDialog from './FormDialog';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { getTodos } from '../actions/todoActions';
+import propTypes from 'prop-types';
 
 class Todo extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isLoading: true,
-      newTodo: '',
-      allCompleted: false,
-      todos: [],
-      open: false,
-    };
-  }
-  componentDidMount = () => {
-    axios.get('https://exceed-react.herokuapp.com/list').then((res) =>
-      this.setState({
-        todos: res.data,
-        isLoading: false,
-        allCompleted: res.data.every((element) => element.isCompleted === true),
-      })
-    );
-  };
+	componentDidMount = () => {
+		this.props.getTodos();
+	};
 
-  handleTextChange = (event) => {
-    this.setState({
-      newTodo: event.target.value,
-    });
-  };
+	render() {
+		const todos = this.props.todos.map((element) => {
+			return (
+				<li key={element._id}>
+					<Checkbox color='primary' />
+					<span className={element.isCompleted ? 'done' : ''}>
+						{element.value}
+					</span>
+					<div className='btn-div'>
+						<FormDialog />
+						<Button
+							className='btn-del'
+							id={element._id}
+							variant='contained'
+							color='secondary'
+							startIcon={<Delete />}
+						>
+							Delete
+						</Button>
+					</div>
+				</li>
+			);
+		});
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    this.state.newTodo.trim()
-      ? axios
-          .post('https://exceed-react.herokuapp.com/list', {
-            value: this.state.newTodo,
-          })
-          .then((res) =>
-            this.setState({
-              todos: res.data,
-              newTodo: '',
-              allCompleted: res.data.every(
-                (element) => element.isCompleted === true
-              ),
-            })
-          )
-      : this.setState({
-          newTodo: '',
-        });
-  };
-
-  removeTask = (id) => {
-    axios.delete(`https://exceed-react.herokuapp.com/list/${id}`).then((res) =>
-      this.setState({
-        todos: res.data,
-        allCompleted: res.data.every((element) => element.isCompleted === true),
-      })
-    );
-  };
-
-  handleCheckChange = (event, id) => {
-    const todos = [...this.state.todos];
-    const todo = todos.find((element) => element._id === id);
-    todo.isCompleted = event.target.checked;
-    this.setState({
-      todos,
-    });
-    axios
-      .patch(`https://exceed-react.herokuapp.com/list/${id}`, {
-        isCompleted: event.target.checked,
-      })
-      .then((res) =>
-        this.setState({
-          todos: res.data,
-          allCompleted: res.data.every(
-            (element) => element.isCompleted === true
-          ),
-        })
-      );
-  };
-
-  allCompleteHandler = () => {
-    const ids = this.state.todos.map((element) => element._id);
-    this.state.allCompleted
-      ? axios
-          .patch(`https://exceed-react.herokuapp.com/list/multiple/${ids}`, {
-            check: false,
-          })
-          .then((res) =>
-            this.setState({
-              todos: res.data,
-              allCompleted: false,
-            })
-          )
-      : axios
-          .patch(`https://exceed-react.herokuapp.com/list/multiple/${ids}`, {
-            check: true,
-          })
-          .then((res) =>
-            this.setState({
-              todos: res.data,
-              allCompleted: true,
-            })
-          );
-  };
-
-  allRemoveHandler = () => {
-    const ids = this.state.todos.map((element) => {
-      if (element.isCompleted) {
-        return element._id;
-      }
-      return null;
-    });
-    axios
-      .delete(
-        `https://exceed-react.herokuapp.com/list/multiple/${ids.filter(
-          Boolean
-        )}`
-      )
-      .then((res) =>
-        this.setState({
-          todos: res.data,
-          allCompleted: res.data.every(
-            (element) => element.isCompleted === true
-          ),
-        })
-      );
-  };
-
-  handleSave = (id, value, open) => {
-    axios
-      .patch(`https://exceed-react.herokuapp.com/list/single/${id}`, {
-        value: value,
-      })
-      .then((res) =>
-        this.setState({
-          todos: res.data,
-          allCompleted: res.data.every(
-            (element) => element.isCompleted === true
-          ),
-        })
-      );
-  };
-
-  render() {
-    return (
-      <Container maxWidth='md'>
-        <div>
-          <form id='form' onSubmit={this.handleSubmit}>
-            <TextField
-              value={this.state.newTodo}
-              onChange={this.handleTextChange}
-              label='Enter Task'
-              id='outlined-size-small'
-              variant='outlined'
-              size='small'
-              autoComplete='off'
-            />
-            <Button
-              color='primary'
-              variant='outlined'
-              size='medium'
-              type='submit'
-            >
-              Add Task
-            </Button>
-          </form>
-        </div>
-
-        <ul>
-          {this.state.todos.map((element) => {
-            return (
-              <li key={element._id}>
-                <Checkbox
-                  checked={element.isCompleted}
-                  onChange={(event) =>
-                    this.handleCheckChange(event, element._id)
-                  }
-                  color='primary'
-                />
-                <span className={element.isCompleted ? 'done' : ''}>
-                  {element.value}
-                </span>
-                <div className='btn-div'>
-                  <FormDialog data={element} save={() => this.handleSave} />
-                  <Button
-                    className='btn-del'
-                    id={element._id}
-                    onClick={() => this.removeTask(element._id)}
-                    variant='contained'
-                    color='secondary'
-                    startIcon={<Delete />}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-        {this.state.todos.length ? (
-          <div className='buttons'>
-            <div>
-              {this.state.allCompleted ? (
-                <Button
-                  variant='outlined'
-                  className='btn'
-                  size='large'
-                  color='primary'
-                  onClick={this.allCompleteHandler}
-                >
-                  Uncomplete Tasks
-                </Button>
-              ) : (
-                <Button
-                  variant='contained'
-                  className='btn'
-                  size='large'
-                  color='primary'
-                  onClick={this.allCompleteHandler}
-                >
-                  Complete Tasks
-                </Button>
-              )}
-            </div>
-            <div className='margin-top'>
-              {this.state.todos.some(
-                (element) => element.isCompleted === true
-              ) ? (
-                <Button
-                  variant='contained'
-                  className='btn'
-                  size='large'
-                  color='secondary'
-                  onClick={this.allRemoveHandler}
-                >
-                  Remove Completed Tasks
-                </Button>
-              ) : (
-                <Button
-                  disabled
-                  variant='contained'
-                  className='btn'
-                  size='large'
-                  color='secondary'
-                  onClick={this.allRemoveHandler}
-                >
-                  Remove Completed Tasks
-                </Button>
-              )}
-            </div>
-          </div>
-        ) : (
-          <h1 className='nothing'>No Tasks...</h1>
-        )}
-      </Container>
-    );
-  }
+		return (
+			<Container maxWidth='md'>
+				<ul>{todos}</ul>
+			</Container>
+		);
+	}
 }
 
-export default Todo;
+Todo.propTypes = {
+	getTodos: propTypes.func.isRequired,
+	posts: propTypes.array.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+	todos: state.todos.items,
+});
+
+export default connect(mapStateToProps, { getTodos })(Todo);
