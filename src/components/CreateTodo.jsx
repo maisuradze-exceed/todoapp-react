@@ -18,7 +18,7 @@ class CreateTodo extends Component {
 		});
 	};
 
-	onSubmit = (event) => {
+	handleSubmit = (event) => {
 		event.preventDefault();
 		const post = {
 			value: this.state.value,
@@ -36,7 +36,7 @@ class CreateTodo extends Component {
 	render() {
 		return (
 			<div>
-				<form id='form' onSubmit={this.onSubmit}>
+				<form id='form' onSubmit={this.handleSubmit}>
 					<TextField
 						label='Enter Task'
 						id='outlined-size-small'
