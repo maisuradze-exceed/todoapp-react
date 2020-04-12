@@ -10,7 +10,6 @@ import {
 	changePage,
 } from '../actions/todoActions';
 import propTypes from 'prop-types';
-
 class Todo extends Component {
 	componentDidMount = () => {
 		this.props.getTodos();
@@ -79,7 +78,7 @@ class Todo extends Component {
 
 		return (
 			<ul className='todos'>
-				{this.props.todos.length ? <div>{todos}</div> : 'No tasks...'}
+				{this.props.todos.length ? todos : 'No Tasks...'}
 			</ul>
 		);
 	}

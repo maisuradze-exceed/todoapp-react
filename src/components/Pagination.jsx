@@ -22,8 +22,7 @@ export class Pagination extends Component {
 				className='mainpag'
 				style={{
 					display: 'flex',
-					marginRight: 150,
-					paddingRight: 20,
+					marginRight: 60,
 					justifyContent: 'center',
 					alignItems: 'center',
 					marginBottom: 10,

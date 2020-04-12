@@ -59,7 +59,7 @@ class CreateTodo extends Component {
 						variant='outlined'
 						size='small'
 						autoComplete='off'
-						inputProps={{ maxLength: 25 }}
+						inputProps={{ maxLength: 30 }}
 						value={this.state.value}
 						onChange={this.onChange}
 						required

@@ -5,6 +5,9 @@ import {
 	REMOVE_TODO,
 	CHANGE_PAGE,
 	EDIT_TODO,
+	COMPLETE_TODOS,
+	UNCOMPLETE_TODOS,
+	REMOVE_TODOS,
 } from './types';
 import axios from 'axios';
 
@@ -69,6 +72,43 @@ export const editTodo = (postData) => (dispatch) => {
 		.then((res) =>
 			dispatch({
 				type: EDIT_TODO,
+				payload: res.data,
+			})
+		);
+};
+
+export const deleteTodos = (postData) => (dispatch) => {
+	axios
+		.delete(`https://exceed-react.herokuapp.com/list/multiple/${postData}`)
+		.then((res) =>
+			dispatch({
+				type: REMOVE_TODOS,
+				payload: res.data,
+			})
+		);
+};
+
+export const completeTodos = (postData) => (dispatch) => {
+	axios
+		.patch(`https://exceed-react.herokuapp.com/list/multiple/${postData}`, {
+			check: true,
+		})
+		.then((res) =>
+			dispatch({
+				type: COMPLETE_TODOS,
+				payload: res.data,
+			})
+		);
+};
+
+export const uncompleteTodos = (postData) => (dispatch) => {
+	axios
+		.patch(`https://exceed-react.herokuapp.com/list/multiple/${postData}`, {
+			check: false,
+		})
+		.then((res) =>
+			dispatch({
+				type: UNCOMPLETE_TODOS,
 				payload: res.data,
 			})
 		);

@@ -5,3 +5,6 @@ export const REMOVE_TODO = 'REMOVE_TODO';
 export const CHANGE_PAGE = 'CHANGE_PAGE';
 export const TOGGLE_DONE = 'TOGGLE_DONE';
 export const EDIT_TODO = 'EDIT_TODO';
+export const COMPLETE_TODOS = 'COMPLETE_TODOS';
+export const UNCOMPLETE_TODOS = 'UNCOMPLETE_TODOS';
+export const REMOVE_TODOS = 'REMOVE_TODOS';

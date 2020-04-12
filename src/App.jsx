@@ -12,11 +12,9 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<Container id='container' maxWidth='md xs'>
+				<Container id='container' maxWidth='md'>
 					<CreateTodo />
-					<div id='todo'>
-						<Todo />
-					</div>
+					<Todo />
 					<Buttons />
 				</Container>
 			</Provider>

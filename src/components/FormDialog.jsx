@@ -73,7 +73,7 @@ class FormDialog extends Component {
 							margin='dense'
 							label='Edit'
 							type='text'
-							inputProps={{ maxLength: 25 }}
+							inputProps={{ maxLength: 30 }}
 							autoComplete='off'
 							fullWidth
 							value={this.state.newValue}
