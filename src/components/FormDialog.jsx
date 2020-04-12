@@ -56,6 +56,7 @@ class FormDialog extends Component {
 					className='btn-del'
 					variant='contained'
 					color='primary'
+					size='small'
 					startIcon={<Edit />}
 					onClick={() => this.handleClick()}
 				>
@@ -72,6 +73,7 @@ class FormDialog extends Component {
 							margin='dense'
 							label='Edit'
 							type='text'
+							inputProps={{ maxLength: 25 }}
 							autoComplete='off'
 							fullWidth
 							value={this.state.newValue}

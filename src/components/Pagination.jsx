@@ -18,10 +18,20 @@ export class Pagination extends Component {
 			pageNumbers.push(i);
 		}
 		return (
-			<ul style={{ display: 'flex', justifyContent: 'center' }}>
+			<ul
+				className='mainpag'
+				style={{
+					display: 'flex',
+					marginRight: 150,
+					paddingRight: 20,
+					justifyContent: 'center',
+					alignItems: 'center',
+					marginBottom: 10,
+				}}
+			>
 				{pageNumbers.map((number) => {
 					return (
-						<li key={number} style={{ marginLeft: 5 }}>
+						<li key={number} className='pagination'>
 							<button onClick={() => this.handleChange(number)}>
 								{number}
 							</button>

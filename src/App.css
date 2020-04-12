@@ -1,64 +1,117 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
-ul {
-  list-style-type: none;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  margin-top: 50px;
+.todos {
+	list-style-type: none;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	margin-top: 50px;
 }
 
 li {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	margin-top: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
 }
 
 .done {
-  text-decoration: line-through;
+	text-decoration: line-through;
+}
+
+#todo {
+	height: 510px;
 }
 
 #form {
-  display: flex;
-  justify-content: center;
-  margin-top: 50px;
+	display: flex;
+	justify-content: center;
+	margin-top: 50px;
 }
 
 .buttons {
-  margin-top: 10px;
+	margin-top: 10px;
 }
 .btn {
-  width: 100%;
+	width: 100%;
 }
 
 .margin-top {
-  margin-top: 10px;
+	margin-top: 10px;
 }
 
 .btn-div {
-  margin-left: auto;
-  display: flex;
+	margin-left: auto;
+	display: flex;
+}
+
+.btn-del:first {
+	margin-left: 10px !important;
 }
 
 .btn-del {
-  margin-left: 10px !important;
+	margin-left: 10px !important;
 }
 
 .nothing {
-  text-align: center;
-  margin-top: 50px;
+	text-align: center;
+	margin-top: 50px;
+}
+#text {
+	margin-left: auto !important;
+}
+
+@media only screen and (max-width: 834px) {
+	#text {
+		margin-left: 0 !important;
+		font-size: 13px;
+	}
+	#container {
+		margin: 0;
+		padding: 0;
+	}
+	.btn-del {
+		margin: 0 !important;
+		padding: 15 !important;
+	}
+	.btn-div {
+		display: flex;
+		justify-content: flex-end;
+		padding: 0;
+		width: 32%;
+	}
+	.MuiButton-startIcon .MuiButton-iconSizeSmall {
+		margin-left: 0 !important;
+	}
+	.MuiButton-startIcon {
+		margin-left: 0px !important;
+		margin-right: 0px !important;
+	}
+}
+
+@media only screen and (max-width: 416px) {
+	#text {
+		font-size: 12px;
+		margin-left: 0 !important;
+	}
+	.MuiButton-containedSizeSmall {
+		font-size: 0 !important;
+	}
+	.mainpag {
+		margin-right: auto !important;
+		padding-left: 0 !important;
+	}
 }

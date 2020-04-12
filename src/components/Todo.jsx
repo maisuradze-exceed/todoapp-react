@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, Container } from '@material-ui/core/';
+import { Button, Checkbox } from '@material-ui/core/';
 import Delete from '@material-ui/icons/Delete';
 import FormDialog from './FormDialog';
-import Pagination from './Pagination';
 import { connect } from 'react-redux';
 import {
 	getTodos,
@@ -26,7 +25,18 @@ class Todo extends Component {
 	};
 
 	handleDelete = (id) => {
-		this.props.removeTodo(id);
+		const indexOfLastItem = this.props.currentPage * this.props.itemsPerPage;
+		const indexofFirstItem = indexOfLastItem - this.props.itemsPerPage;
+		const currentItems = this.props.todos.slice(
+			indexofFirstItem,
+			indexOfLastItem
+		);
+		if (currentItems.length !== 1 || this.props.todos.length === 1) {
+			this.props.removeTodo(id);
+		} else {
+			this.props.removeTodo(id);
+			this.props.changePage(this.props.currentPage - 1);
+		}
 	};
 
 	render() {
@@ -46,7 +56,7 @@ class Todo extends Component {
 							checked={element.isCompleted}
 							onChange={(event) => this.handleCheck(event, element._id)}
 						/>
-						<span className={element.isCompleted ? 'done' : ''}>
+						<span id='text' className={element.isCompleted ? 'done' : ''}>
 							{element.value}
 						</span>
 						<div className='btn-div'>
@@ -55,6 +65,7 @@ class Todo extends Component {
 								className='btn-del'
 								variant='contained'
 								color='secondary'
+								size='small'
 								onClick={() => this.handleDelete(element._id)}
 								startIcon={<Delete />}
 							>
@@ -67,18 +78,9 @@ class Todo extends Component {
 		});
 
 		return (
-			<Container maxWidth='md'>
-				<ul>
-					{this.props.todos.length ? (
-						<div>
-							{todos}
-							<Pagination />
-						</div>
-					) : (
-						'No tasks...'
-					)}
-				</ul>
-			</Container>
+			<ul className='todos'>
+				{this.props.todos.length ? <div>{todos}</div> : 'No tasks...'}
+			</ul>
 		);
 	}
 }

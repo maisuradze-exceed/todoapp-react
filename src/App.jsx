@@ -5,15 +5,20 @@ import store from './store/store';
 import Todo from './components/Todo';
 import Buttons from './components/Buttons';
 import CreateTodo from './components/CreateTodo';
+import { Container } from '@material-ui/core';
 import './App.css';
 
 class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<CreateTodo />
-				<Todo />
-				<Buttons />
+				<Container id='container' maxWidth='md xs'>
+					<CreateTodo />
+					<div id='todo'>
+						<Todo />
+					</div>
+					<Buttons />
+				</Container>
 			</Provider>
 		);
 	}
