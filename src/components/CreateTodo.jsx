@@ -19,27 +19,31 @@ class CreateTodo extends Component {
 	};
 
 	handleSubmit = (event) => {
+		const {
+			currentPage,
+			itemsPerPage,
+			todos,
+			addTodo,
+			changePage,
+		} = this.props;
 		event.preventDefault();
 		const post = {
 			value: this.state.value,
 		};
-		const indexOfLastItem = this.props.currentPage * this.props.itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - this.props.itemsPerPage;
-		const currentItems = this.props.todos.slice(
-			indexofFirstItem,
-			indexOfLastItem
-		);
+		const indexOfLastItem = currentPage * itemsPerPage;
+		const indexofFirstItem = indexOfLastItem - itemsPerPage;
+		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
 		if (currentItems.length === 10) {
 			if (this.state.value.trim().length) {
-				this.props.addTodo(post);
-				this.props.changePage(this.props.currentPage + 1);
+				addTodo(post);
+				changePage(currentPage + 1);
 			}
 			this.setState({
 				value: '',
 			});
 		} else {
 			this.state.value.trim().length
-				? this.props.addTodo(post)
+				? addTodo(post)
 				: this.setState({
 						value: '',
 				  });

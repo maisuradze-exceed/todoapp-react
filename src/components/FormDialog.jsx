@@ -21,8 +21,9 @@ class FormDialog extends Component {
 	}
 
 	handleClick = () => {
+		const { edit } = this.props;
 		this.setState({
-			newValue: this.props.edit,
+			newValue: edit,
 			open: !this.state.open,
 		});
 	};
@@ -34,12 +35,13 @@ class FormDialog extends Component {
 	};
 
 	handleSave = () => {
+		const { id, editTodo } = this.props;
 		if (this.state.newValue.trim()) {
 			const data = {
-				newValue: this.state.newValue.trim(),
-				id: this.props.id,
+				newValue: this.state.newValue,
+				id: id,
 			};
-			this.props.editTodo(data);
+			editTodo(data);
 			this.setState({
 				open: false,
 			});

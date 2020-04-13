@@ -12,24 +12,23 @@ import {
 
 class Buttons extends Component {
 	handleRemove = () => {
+		const { todos, deleteTodos, changePage } = this.props;
 		const ids = [];
-		this.props.todos.map((element) => {
+		todos.map((element) => {
 			if (element.isCompleted) {
 				ids.push(element._id);
 			}
 			return element;
 		});
-		this.props.deleteTodos(ids);
-		this.props.changePage(1);
+		deleteTodos(ids);
+		changePage(1);
 	};
 
 	handleComplete = () => {
-		const indexOfLastItem = this.props.currentPage * this.props.itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - this.props.itemsPerPage;
-		const currentItems = this.props.todos.slice(
-			indexofFirstItem,
-			indexOfLastItem
-		);
+		const { currentPage, itemsPerPage, todos, completeTodos } = this.props;
+		const indexOfLastItem = currentPage * itemsPerPage;
+		const indexofFirstItem = indexOfLastItem - itemsPerPage;
+		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
 		const ids = [];
 		currentItems.map((element) => {
 			if (!element.isCompleted) {
@@ -37,16 +36,14 @@ class Buttons extends Component {
 			}
 			return null;
 		});
-		this.props.completeTodos(ids);
+		completeTodos(ids);
 	};
 
 	handleUncomplete = () => {
-		const indexOfLastItem = this.props.currentPage * this.props.itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - this.props.itemsPerPage;
-		const currentItems = this.props.todos.slice(
-			indexofFirstItem,
-			indexOfLastItem
-		);
+		const { currentPage, itemsPerPage, todos, uncompleteTodos } = this.props;
+		const indexOfLastItem = currentPage * itemsPerPage;
+		const indexofFirstItem = indexOfLastItem - itemsPerPage;
+		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
 		const ids = [];
 		currentItems.map((element) => {
 			if (element.isCompleted) {
@@ -54,23 +51,19 @@ class Buttons extends Component {
 			}
 			return null;
 		});
-		this.props.uncompleteTodos(ids);
+		uncompleteTodos(ids);
 	};
 	render() {
-		const indexOfLastItem = this.props.currentPage * this.props.itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - this.props.itemsPerPage;
-		const currentItems = this.props.todos.slice(
-			indexofFirstItem,
-			indexOfLastItem
-		);
-		const todos = this.props.todos.some(
-			(element) => element.isCompleted === true
-		);
+		const { currentPage, itemsPerPage, todos } = this.props;
+		const indexOfLastItem = currentPage * itemsPerPage;
+		const indexofFirstItem = indexOfLastItem - itemsPerPage;
+		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
+		const todo = todos.some((element) => element.isCompleted === true);
 		const checkItems = currentItems.every(
 			(element) => element.isCompleted === true
 		);
 
-		const count = this.props.todos.length;
+		const count = todos.length;
 		const items = (
 			<div className='buttons'>
 				<Pagination />
@@ -96,7 +89,7 @@ class Buttons extends Component {
 							Uncomplete Tasks
 						</Button>
 					)}
-					{todos ? (
+					{todo ? (
 						<Button
 							variant='contained'
 							className='btn'

@@ -5,16 +5,14 @@ import { changePage } from '../actions/todoActions';
 
 export class Pagination extends Component {
 	handleChange = (number) => {
-		this.props.changePage(number);
+		const { changePage } = this.props;
+		changePage(number);
 	};
 	render() {
 		const pageNumbers = [];
+		const { todos, itemsPerPage } = this.props;
 
-		for (
-			let i = 1;
-			i <= Math.ceil(this.props.todos.length / this.props.itemsPerPage);
-			i++
-		) {
+		for (let i = 1; i <= Math.ceil(todos.length / itemsPerPage); i++) {
 			pageNumbers.push(i);
 		}
 		return (

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Checkbox } from '@material-ui/core/';
-import Delete from '@material-ui/icons/Delete';
-import FormDialog from './FormDialog';
+import TodoItems from './TodoItems';
 import { connect } from 'react-redux';
 import {
 	getTodos,
@@ -12,73 +10,55 @@ import {
 import propTypes from 'prop-types';
 class Todo extends Component {
 	componentDidMount = () => {
-		this.props.getTodos();
+		const { getTodos } = this.props;
+		getTodos();
 	};
 
 	handleCheck = (event, id) => {
+		const { checkTodo } = this.props;
 		const checked = {
 			isCompleted: event.target.checked,
 			id: id,
 		};
-		this.props.checkTodo(checked);
+		checkTodo(checked);
 	};
 
 	handleDelete = (id) => {
-		const indexOfLastItem = this.props.currentPage * this.props.itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - this.props.itemsPerPage;
-		const currentItems = this.props.todos.slice(
-			indexofFirstItem,
-			indexOfLastItem
-		);
-		if (currentItems.length !== 1 || this.props.todos.length === 1) {
-			this.props.removeTodo(id);
+		const {
+			currentPage,
+			itemsPerPage,
+			todos,
+			removeTodo,
+			changePage,
+		} = this.props;
+		const indexOfLastItem = currentPage * itemsPerPage;
+		const indexofFirstItem = indexOfLastItem - itemsPerPage;
+		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
+		if (currentItems.length !== 1 || todos.length === 1) {
+			removeTodo(id);
 		} else {
-			this.props.removeTodo(id);
-			this.props.changePage(this.props.currentPage - 1);
+			removeTodo(id);
+			changePage(currentPage - 1);
 		}
 	};
 
 	render() {
-		const indexOfLastItem = this.props.currentPage * this.props.itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - this.props.itemsPerPage;
-		const currentItems = this.props.todos.slice(
-			indexofFirstItem,
-			indexOfLastItem
-		);
-
-		const todos = currentItems.map((element) => {
-			return (
-				<div key={element._id}>
-					<li>
-						<Checkbox
-							color='primary'
-							checked={element.isCompleted}
-							onChange={(event) => this.handleCheck(event, element._id)}
-						/>
-						<span id='text' className={element.isCompleted ? 'done' : ''}>
-							{element.value}
-						</span>
-						<div className='btn-div'>
-							<FormDialog edit={element.value} id={element._id} />
-							<Button
-								className='btn-del'
-								variant='contained'
-								color='secondary'
-								size='small'
-								onClick={() => this.handleDelete(element._id)}
-								startIcon={<Delete />}
-							>
-								Delete
-							</Button>
-						</div>
-					</li>
-				</div>
-			);
-		});
+		const { currentPage, itemsPerPage, todos } = this.props;
+		const indexOfLastItem = currentPage * itemsPerPage;
+		const indexofFirstItem = indexOfLastItem - itemsPerPage;
+		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
 
 		return (
 			<ul className='todos'>
-				{this.props.todos.length ? todos : 'No Tasks...'}
+				{todos.length ? (
+					<TodoItems
+						data={currentItems}
+						check={this.handleCheck}
+						del={this.handleDelete}
+					/>
+				) : (
+					<h3>No Tasks...</h3>
+				)}
 			</ul>
 		);
 	}
