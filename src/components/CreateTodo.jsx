@@ -1,10 +1,15 @@
+// Import from libraries
 import React, { Component } from 'react';
-import { TextField, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
-import { addTodo } from '../actions/services';
 import { bindActionCreators } from 'redux';
+
+// Import from redux
+import { addTodo } from '../actions/services';
 import { getTodos, changePage } from '../actions/actions';
+
+// Material UI
+import { TextField, Button } from '@material-ui/core';
 
 class CreateTodo extends Component {
 	constructor(props) {
@@ -22,32 +27,25 @@ class CreateTodo extends Component {
 
 	handleSubmit = (event) => {
 		event.preventDefault();
-		const { currentPage, itemsPerPage, todos } = this.props;
-		const post = this.state.value;
-		const indexOfLastItem = currentPage * itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - itemsPerPage;
-		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
-		const { getTodos, changePage } = this.props.actions;
-
+		const {
+			currentItems,
+			currentPage,
+			actions: { getTodos, changePage },
+		} = this.props;
+		const post = this.state.value.trim();
+		const clear = () => this.setState({ value: '' });
 		if (currentItems.length === 10) {
 			if (this.state.value.trim().length) {
 				addTodo(post)
 					.then((res) => getTodos(res))
 					.then(changePage(currentPage + 1));
 			}
-
-			this.setState({
-				value: '',
-			});
+			clear();
 		} else {
 			this.state.value.trim().length
 				? addTodo(post).then((res) => getTodos(res))
-				: this.setState({
-						value: '',
-				  });
-			this.setState({
-				value: '',
-			});
+				: clear();
+			clear();
 		}
 	};
 
@@ -82,14 +80,14 @@ class CreateTodo extends Component {
 
 CreateTodo.propTypes = {
 	todos: propTypes.array.isRequired,
-	currentPage: propTypes.any.isRequired,
-	itemsPerPage: propTypes.any.isRequired,
+	currentPage: propTypes.number.isRequired,
+	currentItems: propTypes.array.isRequired,
+	actions: propTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	todos: state.todos.items,
 	currentPage: state.todos.currentPage,
-	itemsPerPage: state.todos.itemsPerPage,
 });
 
 const matchDispatchToProps = (dispatch) => {

@@ -1,7 +1,13 @@
+// Import from libraries
 import React, { Component } from 'react';
+import propTypes from 'prop-types';
+
+// Import components
+import FormDialog from './FormDialog';
+
+// Material UI
 import { Button, Checkbox } from '@material-ui/core/';
 import Delete from '@material-ui/icons/Delete';
-import FormDialog from './FormDialog';
 
 export class TodoItems extends Component {
 	render() {
@@ -38,5 +44,11 @@ export class TodoItems extends Component {
 		return <div>{todos}</div>;
 	}
 }
+
+TodoItems.propTypes = {
+	check: propTypes.func.isRequired,
+	data: propTypes.array.isRequired,
+	del: propTypes.func.isRequired,
+};
 
 export default TodoItems;

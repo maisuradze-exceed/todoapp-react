@@ -1,9 +1,13 @@
+// Import from libraries
 import React, { Component } from 'react';
-import { Button } from '@material-ui/core';
 import { connect } from 'react-redux';
-import propTypes from 'prop-types';
-import Pagination from './Pagination';
 import { bindActionCreators } from 'redux';
+import propTypes from 'prop-types';
+
+// Import from Components
+import Pagination from './Pagination';
+
+// Import from redux
 import { getTodos, changePage } from '../actions/actions';
 import {
 	deleteAllTodo,
@@ -11,10 +15,15 @@ import {
 	uncompleteAllTodo,
 } from '../actions/services';
 
+// Material UI
+import { Button } from '@material-ui/core';
+
 class Buttons extends Component {
 	handleRemove = () => {
-		const { todos } = this.props;
-		const { getTodos, changePage } = this.props.actions;
+		const {
+			todos,
+			actions: { getTodos, changePage },
+		} = this.props;
 		const ids = [];
 		todos.map((element) => {
 			if (element.isCompleted) {
@@ -28,11 +37,10 @@ class Buttons extends Component {
 	};
 
 	handleComplete = () => {
-		const { currentPage, itemsPerPage, todos } = this.props;
-		const { getTodos } = this.props.actions;
-		const indexOfLastItem = currentPage * itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - itemsPerPage;
-		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
+		const {
+			currentItems,
+			actions: { getTodos },
+		} = this.props;
 		const ids = [];
 		currentItems.map((element) => {
 			if (!element.isCompleted) {
@@ -44,11 +52,10 @@ class Buttons extends Component {
 	};
 
 	handleUncomplete = () => {
-		const { currentPage, itemsPerPage, todos } = this.props;
-		const { getTodos } = this.props.actions;
-		const indexOfLastItem = currentPage * itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - itemsPerPage;
-		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
+		const {
+			currentItems,
+			actions: { getTodos },
+		} = this.props;
 		const ids = [];
 		currentItems.map((element) => {
 			if (element.isCompleted) {
@@ -59,14 +66,7 @@ class Buttons extends Component {
 		uncompleteAllTodo(ids).then((res) => getTodos(res));
 	};
 	render() {
-		const { currentPage, itemsPerPage, todos } = this.props;
-		const indexOfLastItem = currentPage * itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - itemsPerPage;
-		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
-		const todo = todos.some((element) => element.isCompleted === true);
-		const checkItems = currentItems.every(
-			(element) => element.isCompleted === true
-		);
+		const { todos, todo, checkItems } = this.props;
 
 		const count = todos.length;
 		const items = (
@@ -117,21 +117,20 @@ class Buttons extends Component {
 				</div>
 			</div>
 		);
-
 		return <div>{count ? items : ''}</div>;
 	}
 }
 
 Buttons.propTypes = {
 	todos: propTypes.array.isRequired,
-	currentPage: propTypes.any.isRequired,
-	itemsPerPage: propTypes.any.isRequired,
+	todo: propTypes.bool.isRequired,
+	currentItems: propTypes.array.isRequired,
+	actions: propTypes.object.isRequired,
+	checkItems: propTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	todos: state.todos.items,
-	currentPage: state.todos.currentPage,
-	itemsPerPage: state.todos.itemsPerPage,
 });
 
 const matchDispatchToProps = (dispatch) => {

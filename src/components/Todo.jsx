@@ -1,10 +1,15 @@
+// Import from libraries
 import React, { Component } from 'react';
-import TodoItems from './TodoItems';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import propTypes from 'prop-types';
+
+// Import from redux
 import { fetchTodos, checkTodo, deleteTodo } from '../actions/services';
 import { getTodos, changePage } from '../actions/actions';
+
+// Import from components
+import TodoItems from './TodoItems';
 
 class Todo extends Component {
 	componentDidMount = () => {
@@ -22,11 +27,12 @@ class Todo extends Component {
 	};
 
 	handleDelete = (id) => {
-		const { currentPage, itemsPerPage, todos } = this.props;
-		const { getTodos, changePage } = this.props.actions;
-		const indexOfLastItem = currentPage * itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - itemsPerPage;
-		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
+		const {
+			currentItems,
+			currentPage,
+			todos,
+			actions: { getTodos, changePage },
+		} = this.props;
 		if (currentItems.length !== 1 || todos.length === 1) {
 			deleteTodo(id).then((res) => getTodos(res));
 		} else {
@@ -37,11 +43,7 @@ class Todo extends Component {
 	};
 
 	render() {
-		const { currentPage, itemsPerPage, todos } = this.props;
-		const indexOfLastItem = currentPage * itemsPerPage;
-		const indexofFirstItem = indexOfLastItem - itemsPerPage;
-		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
-
+		const { currentItems, todos } = this.props;
 		return (
 			<ul className='todos'>
 				{todos.length ? (
@@ -60,14 +62,14 @@ class Todo extends Component {
 
 Todo.propTypes = {
 	todos: propTypes.array.isRequired,
-	currentPage: propTypes.any.isRequired,
-	itemsPerPage: propTypes.any.isRequired,
+	currentPage: propTypes.number.isRequired,
+	currentItems: propTypes.array.isRequired,
+	actions: propTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	todos: state.todos.items,
 	currentPage: state.todos.currentPage,
-	itemsPerPage: state.todos.itemsPerPage,
 });
 
 const matchDispatchToProps = (dispatch) => {

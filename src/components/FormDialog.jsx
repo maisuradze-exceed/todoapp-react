@@ -1,4 +1,14 @@
+// Import from libraries
 import React, { Component } from 'react';
+import propTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+// Import from redux
+import { getTodos } from '../actions/actions';
+import { editTodo } from '../actions/services';
+
+// Material UI
 import {
 	TextField,
 	Dialog,
@@ -7,10 +17,6 @@ import {
 	Button,
 } from '@material-ui/core/';
 import Edit from '@material-ui/icons/Edit';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { getTodos } from '../actions/actions';
-import { editTodo } from '../actions/services';
 
 class FormDialog extends Component {
 	constructor(props) {
@@ -38,19 +44,19 @@ class FormDialog extends Component {
 	handleSave = () => {
 		const { id } = this.props;
 		const { getTodos } = this.props.actions;
+		const close = () =>
+			this.setState({
+				open: false,
+			});
 		const data = {
 			newValue: this.state.newValue,
 			id: id,
 		};
 		if (this.state.newValue.trim()) {
 			editTodo(data).then((res) => getTodos(res));
-			this.setState({
-				open: false,
-			});
+			close();
 		} else {
-			this.setState({
-				open: false,
-			});
+			close();
 		}
 	};
 	render() {
@@ -94,6 +100,12 @@ class FormDialog extends Component {
 		);
 	}
 }
+
+FormDialog.propTypes = {
+	actions: propTypes.object.isRequired,
+	edit: propTypes.string.isRequired,
+	id: propTypes.string.isRequired,
+};
 
 const matchDispatchToProps = (dispatch) => {
 	return {
