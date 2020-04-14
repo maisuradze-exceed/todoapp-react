@@ -3,16 +3,18 @@ import { Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import Pagination from './Pagination';
+import { bindActionCreators } from 'redux';
+import { getTodos, changePage } from '../actions/actions';
 import {
-	deleteTodos,
-	completeTodos,
-	changePage,
-	uncompleteTodos,
-} from '../actions/todoActions';
+	deleteAllTodo,
+	completeAllTodo,
+	uncompleteAllTodo,
+} from '../actions/services';
 
 class Buttons extends Component {
 	handleRemove = () => {
-		const { todos, deleteTodos, changePage } = this.props;
+		const { todos } = this.props;
+		const { getTodos, changePage } = this.props.actions;
 		const ids = [];
 		todos.map((element) => {
 			if (element.isCompleted) {
@@ -20,12 +22,14 @@ class Buttons extends Component {
 			}
 			return element;
 		});
-		deleteTodos(ids);
-		changePage(1);
+		deleteAllTodo(ids)
+			.then((res) => getTodos(res))
+			.then(changePage(1));
 	};
 
 	handleComplete = () => {
-		const { currentPage, itemsPerPage, todos, completeTodos } = this.props;
+		const { currentPage, itemsPerPage, todos } = this.props;
+		const { getTodos } = this.props.actions;
 		const indexOfLastItem = currentPage * itemsPerPage;
 		const indexofFirstItem = indexOfLastItem - itemsPerPage;
 		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
@@ -36,11 +40,12 @@ class Buttons extends Component {
 			}
 			return null;
 		});
-		completeTodos(ids);
+		completeAllTodo(ids).then((res) => getTodos(res));
 	};
 
 	handleUncomplete = () => {
-		const { currentPage, itemsPerPage, todos, uncompleteTodos } = this.props;
+		const { currentPage, itemsPerPage, todos } = this.props;
+		const { getTodos } = this.props.actions;
 		const indexOfLastItem = currentPage * itemsPerPage;
 		const indexofFirstItem = indexOfLastItem - itemsPerPage;
 		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
@@ -51,7 +56,7 @@ class Buttons extends Component {
 			}
 			return null;
 		});
-		uncompleteTodos(ids);
+		uncompleteAllTodo(ids).then((res) => getTodos(res));
 	};
 	render() {
 		const { currentPage, itemsPerPage, todos } = this.props;
@@ -121,10 +126,6 @@ Buttons.propTypes = {
 	todos: propTypes.array.isRequired,
 	currentPage: propTypes.any.isRequired,
 	itemsPerPage: propTypes.any.isRequired,
-	changePage: propTypes.func.isRequired,
-	deleteTodos: propTypes.func.isRequired,
-	completeTodos: propTypes.func.isRequired,
-	uncompleteTodos: propTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -133,9 +134,10 @@ const mapStateToProps = (state) => ({
 	itemsPerPage: state.todos.itemsPerPage,
 });
 
-export default connect(mapStateToProps, {
-	deleteTodos,
-	completeTodos,
-	changePage,
-	uncompleteTodos,
-})(Buttons);
+const matchDispatchToProps = (dispatch) => {
+	return {
+		actions: bindActionCreators({ getTodos, changePage }, dispatch),
+	};
+};
+
+export default connect(mapStateToProps, matchDispatchToProps)(Buttons);

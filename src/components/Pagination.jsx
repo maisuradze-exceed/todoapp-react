@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
-import { changePage } from '../actions/todoActions';
+import { bindActionCreators } from 'redux';
+import { changePage } from '../actions/actions';
 
 export class Pagination extends Component {
 	handleChange = (number) => {
-		const { changePage } = this.props;
+		const { changePage } = this.props.actions;
 		changePage(number);
 	};
 	render() {
@@ -44,7 +45,6 @@ Pagination.propTypes = {
 	todos: propTypes.array.isRequired,
 	currentPage: propTypes.any.isRequired,
 	itemsPerPage: propTypes.any.isRequired,
-	changePage: propTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -53,4 +53,10 @@ const mapStateToProps = (state) => ({
 	itemsPerPage: state.todos.itemsPerPage,
 });
 
-export default connect(mapStateToProps, { changePage })(Pagination);
+const matchDispatchToProps = (dispatch) => {
+	return {
+		actions: bindActionCreators({ changePage }, dispatch),
+	};
+};
+
+export default connect(mapStateToProps, matchDispatchToProps)(Pagination);

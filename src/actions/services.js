@@ -1,48 +1,99 @@
 import axios from 'axios';
 
-export const getTodos = (postData) => {
-	// const request = axios.get('https://exceed-react.herokuapp.com/list');
-	console.log(postData);
+export const fetchTodos = () => {
+	return axios
+		.get(`https://exceed-react.herokuapp.com/list/`)
+		.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+			throw error;
+		});
 };
 
-export const addTodo = (postData) => {
-	// const request = axios.post('https://exceed-react.herokuapp.com/list', {
-	// 	value: postData.value,
-	// });
-	console.log(postData);
+export const addTodo = (data) => {
+	return axios
+		.post(`https://exceed-react.herokuapp.com/list/`, {
+			value: data,
+		})
+		.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+			throw error;
+		});
 };
 
-export const checkTodo = (postData) => {
-	// const request = axios.get('https://exceed-react.herokuapp.com/list');
-	console.log(postData);
+export const checkTodo = (data) => {
+	return axios
+		.patch(`https://exceed-react.herokuapp.com/list/${data.id}`, {
+			isCompleted: data.isCompleted,
+		})
+		.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+			throw error;
+		});
 };
 
-export const removeTodo = (postData) => {
-	// const request = axios.get('https://exceed-react.herokuapp.com/list');
-	console.log(postData);
+export const deleteTodo = (id) => {
+	return axios
+		.delete(`https://exceed-react.herokuapp.com/list/${id}`)
+		.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+			throw error;
+		});
 };
 
-export const changePage = (postData) => {
-	// const request = axios.get('https://exceed-react.herokuapp.com/list');
-	console.log(postData);
+export const editTodo = (data) => {
+	return axios
+		.patch(`https://exceed-react.herokuapp.com/list/single/${data.id}`, {
+			value: data.newValue,
+		})
+		.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+			throw error;
+		});
 };
 
-export const editTodo = (postData) => {
-	// const request = axios.get('https://exceed-react.herokuapp.com/list');
-	console.log(postData);
+export const deleteAllTodo = (ids) => {
+	return axios
+		.delete(`https://exceed-react.herokuapp.com/list/multiple/${ids}`)
+		.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+			throw error;
+		});
 };
 
-export const deleteTodos = (postData) => {
-	// const request = axios.get('https://exceed-react.herokuapp.com/list');
-	console.log(postData);
+export const completeAllTodo = (ids) => {
+	return axios
+		.patch(`https://exceed-react.herokuapp.com/list/multiple/${ids}`, {
+			check: true,
+		})
+		.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+			throw error;
+		});
 };
 
-export const completeTodos = (postData) => {
-	// const request = axios.get('https://exceed-react.herokuapp.com/list');
-	console.log(postData);
-};
-
-export const uncompleteTodos = (postData) => {
-	// const request = axios.get('https://exceed-react.herokuapp.com/list');
-	console.log(postData);
+export const uncompleteAllTodo = (ids) => {
+	return axios
+		.patch(`https://exceed-react.herokuapp.com/list/multiple/${ids}`, {
+			check: false,
+		})
+		.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+			throw error;
+		});
 };

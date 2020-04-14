@@ -7,9 +7,10 @@ import {
 	Button,
 } from '@material-ui/core/';
 import Edit from '@material-ui/icons/Edit';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { editTodo } from '../actions/todoActions';
-import propTypes from 'prop-types';
+import { getTodos } from '../actions/actions';
+import { editTodo } from '../actions/services';
 
 class FormDialog extends Component {
 	constructor(props) {
@@ -35,13 +36,14 @@ class FormDialog extends Component {
 	};
 
 	handleSave = () => {
-		const { id, editTodo } = this.props;
+		const { id } = this.props;
+		const { getTodos } = this.props.actions;
+		const data = {
+			newValue: this.state.newValue,
+			id: id,
+		};
 		if (this.state.newValue.trim()) {
-			const data = {
-				newValue: this.state.newValue,
-				id: id,
-			};
-			editTodo(data);
+			editTodo(data).then((res) => getTodos(res));
 			this.setState({
 				open: false,
 			});
@@ -93,8 +95,10 @@ class FormDialog extends Component {
 	}
 }
 
-FormDialog.propTypes = {
-	editTodo: propTypes.func.isRequired,
+const matchDispatchToProps = (dispatch) => {
+	return {
+		actions: bindActionCreators({ getTodos }, dispatch),
+	};
 };
 
-export default connect(null, { editTodo })(FormDialog);
+export default connect(null, matchDispatchToProps)(FormDialog);

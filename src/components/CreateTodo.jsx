@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { TextField, Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
-import { addTodo, changePage } from '../actions/todoActions';
+import { addTodo } from '../actions/services';
+import { bindActionCreators } from 'redux';
+import { getTodos, changePage } from '../actions/actions';
 
 class CreateTodo extends Component {
 	constructor(props) {
@@ -19,31 +21,27 @@ class CreateTodo extends Component {
 	};
 
 	handleSubmit = (event) => {
-		const {
-			currentPage,
-			itemsPerPage,
-			todos,
-			addTodo,
-			changePage,
-		} = this.props;
 		event.preventDefault();
-		const post = {
-			value: this.state.value,
-		};
+		const { currentPage, itemsPerPage, todos } = this.props;
+		const post = this.state.value;
 		const indexOfLastItem = currentPage * itemsPerPage;
 		const indexofFirstItem = indexOfLastItem - itemsPerPage;
 		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
+		const { getTodos, changePage } = this.props.actions;
+
 		if (currentItems.length === 10) {
 			if (this.state.value.trim().length) {
-				addTodo(post);
-				changePage(currentPage + 1);
+				addTodo(post)
+					.then((res) => getTodos(res))
+					.then(changePage(currentPage + 1));
 			}
+
 			this.setState({
 				value: '',
 			});
 		} else {
 			this.state.value.trim().length
-				? addTodo(post)
+				? addTodo(post).then((res) => getTodos(res))
 				: this.setState({
 						value: '',
 				  });
@@ -83,8 +81,9 @@ class CreateTodo extends Component {
 }
 
 CreateTodo.propTypes = {
-	addTodo: propTypes.func.isRequired,
-	changePage: propTypes.func.isRequired,
+	todos: propTypes.array.isRequired,
+	currentPage: propTypes.any.isRequired,
+	itemsPerPage: propTypes.any.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -93,4 +92,10 @@ const mapStateToProps = (state) => ({
 	itemsPerPage: state.todos.itemsPerPage,
 });
 
-export default connect(mapStateToProps, { addTodo, changePage })(CreateTodo);
+const matchDispatchToProps = (dispatch) => {
+	return {
+		actions: bindActionCreators({ getTodos, changePage }, dispatch),
+	};
+};
+
+export default connect(mapStateToProps, matchDispatchToProps)(CreateTodo);

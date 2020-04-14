@@ -1,44 +1,38 @@
 import React, { Component } from 'react';
 import TodoItems from './TodoItems';
 import { connect } from 'react-redux';
-import {
-	getTodos,
-	checkTodo,
-	removeTodo,
-	changePage,
-} from '../actions/todoActions';
+import { bindActionCreators } from 'redux';
 import propTypes from 'prop-types';
+import { fetchTodos, checkTodo, deleteTodo } from '../actions/services';
+import { getTodos, changePage } from '../actions/actions';
+
 class Todo extends Component {
 	componentDidMount = () => {
-		const { getTodos } = this.props;
-		getTodos();
+		const { getTodos } = this.props.actions;
+		fetchTodos().then((res) => getTodos(res));
 	};
 
 	handleCheck = (event, id) => {
-		const { checkTodo } = this.props;
+		const { getTodos } = this.props.actions;
 		const checked = {
 			isCompleted: event.target.checked,
 			id: id,
 		};
-		checkTodo(checked);
+		checkTodo(checked).then((res) => getTodos(res));
 	};
 
 	handleDelete = (id) => {
-		const {
-			currentPage,
-			itemsPerPage,
-			todos,
-			removeTodo,
-			changePage,
-		} = this.props;
+		const { currentPage, itemsPerPage, todos } = this.props;
+		const { getTodos, changePage } = this.props.actions;
 		const indexOfLastItem = currentPage * itemsPerPage;
 		const indexofFirstItem = indexOfLastItem - itemsPerPage;
 		const currentItems = todos.slice(indexofFirstItem, indexOfLastItem);
 		if (currentItems.length !== 1 || todos.length === 1) {
-			removeTodo(id);
+			deleteTodo(id).then((res) => getTodos(res));
 		} else {
-			removeTodo(id);
-			changePage(currentPage - 1);
+			deleteTodo(id)
+				.then((res) => getTodos(res))
+				.then(changePage(currentPage - 1));
 		}
 	};
 
@@ -65,13 +59,9 @@ class Todo extends Component {
 }
 
 Todo.propTypes = {
-	getTodos: propTypes.func.isRequired,
-	checkTodo: propTypes.func.isRequired,
-	removeTodo: propTypes.func.isRequired,
 	todos: propTypes.array.isRequired,
 	currentPage: propTypes.any.isRequired,
 	itemsPerPage: propTypes.any.isRequired,
-	changePage: propTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -80,9 +70,10 @@ const mapStateToProps = (state) => ({
 	itemsPerPage: state.todos.itemsPerPage,
 });
 
-export default connect(mapStateToProps, {
-	getTodos,
-	checkTodo,
-	removeTodo,
-	changePage,
-})(Todo);
+const matchDispatchToProps = (dispatch) => {
+	return {
+		actions: bindActionCreators({ getTodos, changePage }, dispatch),
+	};
+};
+
+export default connect(mapStateToProps, matchDispatchToProps)(Todo);
