@@ -8,12 +8,12 @@ import propTypes from 'prop-types';
 import Pagination from './Pagination';
 
 // Import from redux
-import { getTodos, changePage } from '../actions/actions';
+import { getTodos, changePage } from '../../actions/actions';
 import {
 	deleteAllTodo,
 	completeAllTodo,
 	uncompleteAllTodo,
-} from '../actions/services';
+} from '../../actions/services';
 
 // Material UI
 import { Button } from '@material-ui/core';

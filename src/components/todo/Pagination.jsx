@@ -5,7 +5,7 @@ import propTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 
 // Import from redux
-import { changePage } from '../actions/actions';
+import { changePage } from '../../actions/actions';
 
 export class Pagination extends Component {
 	handleChange = (number) => {

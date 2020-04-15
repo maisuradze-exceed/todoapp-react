@@ -5,8 +5,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 // Import from redux
-import { getTodos } from '../actions/actions';
-import { editTodo } from '../actions/services';
+import { getTodos } from '../../actions/actions';
+import { editTodo } from '../../actions/services';
 
 // Material UI
 import {
@@ -19,13 +19,10 @@ import {
 import Edit from '@material-ui/icons/Edit';
 
 class FormDialog extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			newValue: this.props.edit,
-			open: false,
-		};
-	}
+	state = {
+		newValue: this.props.edit,
+		open: false,
+	};
 
 	handleClick = () => {
 		const { edit } = this.props;

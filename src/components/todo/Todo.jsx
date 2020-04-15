@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // Import from redux
-import { fetchTodos, checkTodo, deleteTodo } from '../actions/services';
-import { getTodos, changePage } from '../actions/actions';
+import { fetchTodos, checkTodo, deleteTodo } from '../../actions/services';
+import { getTodos, changePage } from '../../actions/actions';
 
 // Import from components
 import TodoItems from './TodoItems';

@@ -5,19 +5,16 @@ import propTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 
 // Import from redux
-import { addTodo } from '../actions/services';
-import { getTodos, changePage } from '../actions/actions';
+import { addTodo } from '../../actions/services';
+import { getTodos, changePage } from '../../actions/actions';
 
 // Material UI
 import { TextField, Button } from '@material-ui/core';
 
 class CreateTodo extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			value: '',
-		};
-	}
+	state = {
+		value: '',
+	};
 
 	onChange = (event) => {
 		this.setState({
@@ -35,18 +32,16 @@ class CreateTodo extends Component {
 		const post = this.state.value.trim();
 		const clear = () => this.setState({ value: '' });
 		if (currentItems.length === 10) {
-			if (this.state.value.trim().length) {
+			if (post.length) {
 				addTodo(post)
 					.then((res) => getTodos(res))
-					.then(changePage(currentPage + 1));
+					.then(changePage(currentPage + 1))
+					.then(clear());
 			}
-			clear();
 		} else {
-			this.state.value.trim().length
-				? addTodo(post).then((res) => getTodos(res))
-				: clear();
-			clear();
+			post.length ? addTodo(post).then((res) => getTodos(res)) : clear();
 		}
+		clear();
 	};
 
 	render() {
