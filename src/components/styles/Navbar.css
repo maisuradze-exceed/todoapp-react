@@ -1,0 +1,19 @@
+.MuiTypography-root {
+	display: flex;
+	align-items: center;
+}
+
+.navbtns {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	min-width: 50px;
+}
+
+.navbutton:hover {
+	background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.MuiButton-sizeLarge {
+	width: 100% !important;
+}

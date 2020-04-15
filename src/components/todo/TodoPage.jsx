@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Import components
-import Todo from '../components/todo/Todo';
-import Buttons from '../components/todo/Buttons';
-import CreateTodo from '../components/todo/CreateTodo';
+import Todo from './Todo';
+import Buttons from './Buttons';
+import CreateTodo from './CreateTodo';
 
 // Material UI And Styles
 import { Container } from '@material-ui/core';
-import '../Todo.css';
+import '../styles/Todo.css';
 
 class App extends Component {
 	render() {

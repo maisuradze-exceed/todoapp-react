@@ -83,6 +83,10 @@ code {
 	width: 50% !important;
 }
 
+.MuiContainer-root {
+	margin-top: 70px;
+}
+
 @media only screen and (max-width: 834px) {
 	#form {
 		display: flex;
