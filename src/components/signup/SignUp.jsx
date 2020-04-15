@@ -8,7 +8,7 @@ import {
 	Typography,
 	Container,
 } from '@material-ui/core/';
-import Link from 'react-router-dom/Link';
+import { Link } from 'react-router-dom/';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import '../styles/Login.css';
 

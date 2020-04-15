@@ -10,14 +10,10 @@ class Navbar extends React.Component {
 			color: 'white',
 		};
 
-		// <IconButton edge='start' color='inherit' aria-label='menu'>
-		// 					<MenuIcon />
-		// 				</IconButton>
-
 		return (
 			<AppBar position='static'>
 				<Toolbar id='toolbar'>
-					<div class='typography'>
+					<div>
 						<Typography variant='h6'>
 							<AssignmentTurnedIn />
 							Task App
