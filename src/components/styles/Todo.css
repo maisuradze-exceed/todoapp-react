@@ -162,7 +162,7 @@ code {
 	li {
 		margin-top: 7px;
 	}
-	.MuiButton-containedSizeSmall {
+	.MuiButton-sizeSmall > .MuiButton-label {
 		font-size: 0 !important;
 	}
 	.MuiButton-sizeLarge > .MuiButton-label {
