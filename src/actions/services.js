@@ -13,12 +13,13 @@ export const fetchTodos = (token) => {
     });
 };
 
-export const addTodo = (data, token) => {
+export const addTodo = (data, token, user) => {
   return axios
     .post(
       `https://exceed-react.herokuapp.com/api/data/`,
       {
         value: data,
+        user,
       },
       {
         headers: { 'auth-token': `${token}` },
@@ -32,12 +33,13 @@ export const addTodo = (data, token) => {
     });
 };
 
-export const checkTodo = (data, token) => {
+export const checkTodo = (data, token, user) => {
   return axios
     .patch(
       `https://exceed-react.herokuapp.com/api/data/${data.id}`,
       {
         isCompleted: data.isCompleted,
+        user,
       },
       {
         headers: { 'auth-token': `${token}` },
@@ -64,12 +66,13 @@ export const deleteTodo = (id, token) => {
     });
 };
 
-export const editTodo = (data, token) => {
+export const editTodo = (data, token, user) => {
   return axios
     .patch(
       `https://exceed-react.herokuapp.com/api/data/single/${data.id}`,
       {
         value: data.newValue,
+        user,
       },
       {
         headers: { 'auth-token': `${token}` },
@@ -96,12 +99,13 @@ export const deleteAllTodo = (ids, token) => {
     });
 };
 
-export const completeAllTodo = (ids, token) => {
+export const completeAllTodo = (ids, token, user) => {
   return axios
     .patch(
       `https://exceed-react.herokuapp.com/api/data/multiple/${ids}`,
       {
         check: true,
+        user,
       },
       {
         headers: { 'auth-token': `${token}` },
@@ -115,12 +119,13 @@ export const completeAllTodo = (ids, token) => {
     });
 };
 
-export const uncompleteAllTodo = (ids, token) => {
+export const uncompleteAllTodo = (ids, token, user) => {
   return axios
     .patch(
       `https://exceed-react.herokuapp.com/api/data/multiple/${ids}`,
       {
         check: false,
+        user,
       },
       {
         headers: { 'auth-token': `${token}` },

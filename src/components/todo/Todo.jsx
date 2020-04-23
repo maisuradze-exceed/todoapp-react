@@ -26,12 +26,13 @@ class Todo extends Component {
     const {
       actions: { getTodos },
       token,
+      user,
     } = this.props;
     const checked = {
       isCompleted: event.target.checked,
-      id: id,
+      id,
     };
-    checkTodo(checked, token).then((res) => getTodos(res));
+    checkTodo(checked, token, user).then((res) => getTodos(res));
   };
 
   handleDelete = (id) => {
@@ -81,6 +82,7 @@ const mapStateToProps = (state) => ({
   currentPage: state.todos.currentPage,
   isLoggedIn: state.user.isLoggedIn,
   token: state.user.token,
+  user: state.user.user,
 });
 
 const matchDispatchToProps = (dispatch) => {

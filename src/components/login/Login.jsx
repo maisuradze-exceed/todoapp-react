@@ -63,15 +63,13 @@ export class Login extends Component {
       })
       .then(() => {
         const token = localStorage.getItem('auth-token');
-        if (token) {
-          const decodedToken = jwtDecode(token);
-          logInUser({
-            token,
-            decodedToken,
-          });
-        }
+        const decodedToken = jwtDecode(token);
+        logInUser({
+          token,
+          decodedToken,
+        });
       })
-      .catch((err) =>
+      .catch(() =>
         this.setState({
           ...this.state,
           password: '',

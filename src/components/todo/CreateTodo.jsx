@@ -28,19 +28,22 @@ class CreateTodo extends Component {
       currentItems,
       currentPage,
       token,
+      user,
       actions: { getTodos, changePage },
     } = this.props;
     const post = this.state.value.trim();
     const clear = () => this.setState({ value: '' });
     if (currentItems.length === 10) {
       if (post.length) {
-        addTodo(post, token)
-          .then((res) => getTodos(res))
+        addTodo(post, token, user)
+          .then((res) => getTodos(res, user))
           .then(changePage(currentPage + 1))
           .then(clear());
       }
     } else {
-      post.length ? addTodo(post, token).then((res) => getTodos(res)) : clear();
+      post.length
+        ? addTodo(post, token, user).then((res) => getTodos(res, user))
+        : clear();
     }
     clear();
   };
@@ -85,6 +88,7 @@ const mapStateToProps = (state) => ({
   todos: state.todos.items,
   currentPage: state.todos.currentPage,
   token: state.user.token,
+  user: state.user.user,
 });
 
 const matchDispatchToProps = (dispatch) => {

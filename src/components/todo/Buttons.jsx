@@ -41,6 +41,7 @@ class Buttons extends Component {
     const {
       currentItems,
       token,
+      user,
       actions: { getTodos },
     } = this.props;
     const ids = [];
@@ -50,13 +51,14 @@ class Buttons extends Component {
       }
       return null;
     });
-    completeAllTodo(ids, token).then((res) => getTodos(res));
+    completeAllTodo(ids, token, user).then((res) => getTodos(res));
   };
 
   handleUncomplete = () => {
     const {
       currentItems,
       token,
+      user,
       actions: { getTodos },
     } = this.props;
     const ids = [];
@@ -66,7 +68,7 @@ class Buttons extends Component {
       }
       return null;
     });
-    uncompleteAllTodo(ids, token).then((res) => getTodos(res));
+    uncompleteAllTodo(ids, token, user).then((res) => getTodos(res));
   };
   render() {
     const { todos, todo, checkItems } = this.props;
@@ -135,6 +137,7 @@ Buttons.propTypes = {
 const mapStateToProps = (state) => ({
   todos: state.todos.items,
   token: state.user.token,
+  user: state.user.user,
 });
 
 const matchDispatchToProps = (dispatch) => {

@@ -42,6 +42,7 @@ class FormDialog extends Component {
     const {
       id,
       token,
+      user,
       actions: { getTodos },
     } = this.props;
     const close = () =>
@@ -53,7 +54,7 @@ class FormDialog extends Component {
       id: id,
     };
     if (this.state.newValue.trim()) {
-      editTodo(data, token).then((res) => getTodos(res));
+      editTodo(data, token, user).then((res) => getTodos(res, user));
       close();
     } else {
       close();
@@ -109,6 +110,7 @@ FormDialog.propTypes = {
 
 const mapStateToProps = (state) => ({
   token: state.user.token,
+  user: state.user.user,
 });
 
 const matchDispatchToProps = (dispatch) => {

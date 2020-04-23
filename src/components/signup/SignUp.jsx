@@ -68,7 +68,7 @@ export class SignUp extends Component {
       };
       axios
         .post('https://exceed-react.herokuapp.com/api/auth/register', userData)
-        .then((res) =>
+        .then(() =>
           axios
             .post('https://exceed-react.herokuapp.com/api/auth/login', userData)
             .then((res) => {
@@ -77,16 +77,14 @@ export class SignUp extends Component {
             })
             .then(() => {
               const token = localStorage.getItem('auth-token');
-              if (token) {
-                const decodedToken = jwtDecode(token);
-                logInUser({
-                  token,
-                  decodedToken,
-                });
-              }
+              const decodedToken = jwtDecode(token);
+              logInUser({
+                token,
+                decodedToken,
+              });
             })
         )
-        .catch((err) =>
+        .catch(() =>
           this.setState({
             email: '',
             password: '',
@@ -144,6 +142,7 @@ export class SignUp extends Component {
               id='password'
               value={this.state.password}
               onChange={this.handlePassChange}
+              inputProps={{ minLength: 6 }}
             />
             <TextField
               variant='outlined'
@@ -156,6 +155,7 @@ export class SignUp extends Component {
               id='repeatPassword'
               value={this.state.confirmPassword}
               onChange={this.handleConfPassChange}
+              inputProps={{ minLength: 6 }}
             />
             <Button
               type='submit'
