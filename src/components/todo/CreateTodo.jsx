@@ -12,83 +12,85 @@ import { getTodos, changePage } from '../../actions/actions';
 import { TextField, Button } from '@material-ui/core';
 
 class CreateTodo extends Component {
-	state = {
-		value: '',
-	};
+  state = {
+    value: '',
+  };
 
-	onChange = (event) => {
-		this.setState({
-			value: event.target.value,
-		});
-	};
+  onChange = (event) => {
+    this.setState({
+      value: event.target.value,
+    });
+  };
 
-	handleSubmit = (event) => {
-		event.preventDefault();
-		const {
-			currentItems,
-			currentPage,
-			actions: { getTodos, changePage },
-		} = this.props;
-		const post = this.state.value.trim();
-		const clear = () => this.setState({ value: '' });
-		if (currentItems.length === 10) {
-			if (post.length) {
-				addTodo(post)
-					.then((res) => getTodos(res))
-					.then(changePage(currentPage + 1))
-					.then(clear());
-			}
-		} else {
-			post.length ? addTodo(post).then((res) => getTodos(res)) : clear();
-		}
-		clear();
-	};
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const {
+      currentItems,
+      currentPage,
+      token,
+      actions: { getTodos, changePage },
+    } = this.props;
+    const post = this.state.value.trim();
+    const clear = () => this.setState({ value: '' });
+    if (currentItems.length === 10) {
+      if (post.length) {
+        addTodo(post, token)
+          .then((res) => getTodos(res))
+          .then(changePage(currentPage + 1))
+          .then(clear());
+      }
+    } else {
+      post.length ? addTodo(post, token).then((res) => getTodos(res)) : clear();
+    }
+    clear();
+  };
 
-	render() {
-		return (
-			<div>
-				<form id='form' onSubmit={this.handleSubmit}>
-					<TextField
-						label='Enter Task'
-						id='outlined-size-small'
-						variant='outlined'
-						size='small'
-						autoComplete='off'
-						inputProps={{ maxLength: 30 }}
-						value={this.state.value}
-						onChange={this.onChange}
-						required
-					/>
-					<Button
-						color='primary'
-						variant='outlined'
-						size='medium'
-						type='submit'
-					>
-						Add Task
-					</Button>
-				</form>
-			</div>
-		);
-	}
+  render() {
+    return (
+      <div>
+        <form id='form' onSubmit={this.handleSubmit}>
+          <TextField
+            label='Enter Task'
+            id='outlined-size-small'
+            variant='outlined'
+            size='small'
+            autoComplete='off'
+            inputProps={{ maxLength: 30 }}
+            value={this.state.value}
+            onChange={this.onChange}
+            required
+          />
+          <Button
+            color='primary'
+            variant='outlined'
+            size='medium'
+            type='submit'
+          >
+            Add Task
+          </Button>
+        </form>
+      </div>
+    );
+  }
 }
 
 CreateTodo.propTypes = {
-	todos: propTypes.array.isRequired,
-	currentPage: propTypes.number.isRequired,
-	currentItems: propTypes.array.isRequired,
-	actions: propTypes.object.isRequired,
+  todos: propTypes.array.isRequired,
+  currentPage: propTypes.number.isRequired,
+  currentItems: propTypes.array.isRequired,
+  actions: propTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-	todos: state.todos.items,
-	currentPage: state.todos.currentPage,
+  todos: state.todos.items,
+  currentPage: state.todos.currentPage,
+  token: state.user.token,
 });
 
 const matchDispatchToProps = (dispatch) => {
-	return {
-		actions: bindActionCreators({ getTodos, changePage }, dispatch),
-	};
+  return {
+    actions: bindActionCreators({ getTodos, changePage }, dispatch),
+  };
 };
 
 export default connect(mapStateToProps, matchDispatchToProps)(CreateTodo);
