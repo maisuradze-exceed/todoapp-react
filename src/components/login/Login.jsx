@@ -52,7 +52,7 @@ export class Login extends Component {
     const { email, password } = this.state;
     const { logInUser } = this.props.actions;
     const userData = {
-      email,
+      email: email.toLowerCase(),
       password,
     };
     axios

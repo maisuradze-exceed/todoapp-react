@@ -63,7 +63,7 @@ export class SignUp extends Component {
 
     if (password === confirmPassword) {
       const userData = {
-        email,
+        email: email.toLowerCase(),
         password,
       };
       axios
