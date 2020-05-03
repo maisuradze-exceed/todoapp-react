@@ -5,6 +5,11 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom/';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+import {
+  FacebookLoginButton,
+  GithubLoginButton,
+  GoogleLoginButton,
+} from 'react-social-login-buttons';
 
 // Import from redux
 import { logInUser } from '../../actions/actions';
@@ -114,6 +119,24 @@ export class SignUp extends Component {
           <Typography component='h1' variant='h5'>
             Create New Account
           </Typography>
+          <a
+            className='socialbtns'
+            href='https://exceed-react.herokuapp.com/api/otherlogin/auth/facebook'
+          >
+            <FacebookLoginButton className='socialbtns' />
+          </a>
+          <a
+            className='socialbtns'
+            href='https://exceed-react.herokuapp.com/api/otherlogin/auth/github'
+          >
+            <GithubLoginButton className='socialbtns' />
+          </a>
+          <a
+            className='socialbtns'
+            href='https://exceed-react.herokuapp.com/api/otherlogin/auth/google'
+          >
+            <GoogleLoginButton className='socialbtns' />
+          </a>
           {this.state.error ? (
             <Alert severity='error'>{this.state.errorMessage}</Alert>
           ) : null}
@@ -166,14 +189,14 @@ export class SignUp extends Component {
             >
               Sign Up
             </Button>
-            <Grid container>
-              <Grid item>
-                <Link to='/login' variant='body2'>
-                  {'Already have an account? Sign in'}
-                </Link>
-              </Grid>
-            </Grid>
           </form>
+          <Grid container>
+            <Grid item>
+              <Link to='/login' variant='body2'>
+                {'Already have an account? Sign in'}
+              </Link>
+            </Grid>
+          </Grid>
         </div>
       </Container>
     );

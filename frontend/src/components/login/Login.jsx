@@ -5,6 +5,11 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom/';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+import {
+  FacebookLoginButton,
+  GithubLoginButton,
+  GoogleLoginButton,
+} from 'react-social-login-buttons';
 
 // Import from redux
 import { logInUser } from '../../actions/actions';
@@ -18,7 +23,6 @@ import {
   TextField,
   FormControlLabel,
   Grid,
-  Box,
   Typography,
   Container,
   Checkbox,
@@ -82,6 +86,7 @@ export class Login extends Component {
     return (
       <Container component='main' maxWidth='xs'>
         <CssBaseline />
+
         <div className='paper'>
           <Avatar>
             <LockOutlinedIcon />
@@ -89,6 +94,24 @@ export class Login extends Component {
           <Typography component='h1' variant='h5'>
             Sign in
           </Typography>
+          <a
+            className='socialbtns'
+            href='https://exceed-react.herokuapp.com/api/otherlogin/auth/facebook'
+          >
+            <FacebookLoginButton className='socialbtns' />
+          </a>
+          <a
+            className='socialbtns'
+            href='https://exceed-react.herokuapp.com/api/otherlogin/auth/github'
+          >
+            <GithubLoginButton className='socialbtns' />
+          </a>
+          <a
+            className='socialbtns'
+            href='https://exceed-react.herokuapp.com/api/otherlogin/auth/google'
+          >
+            <GoogleLoginButton className='socialbtns' />
+          </a>
           {this.state.failed ? (
             <Alert severity='error'>Email or password is incorrect</Alert>
           ) : null}
@@ -132,21 +155,15 @@ export class Login extends Component {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link to='#' variant='body2'>
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link to='/signup' variant='body2'>
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </form>
+          <Grid container>
+            <Grid item>
+              <Link to='/signup' variant='body2'>
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
         </div>
-        <Box mt={8}></Box>
       </Container>
     );
   }

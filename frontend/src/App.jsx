@@ -15,6 +15,7 @@ import TodoPage from './components/todo/TodoPage';
 import Navbar from './components/Navbar';
 import Login from './components/login/Login';
 import SignUp from './components/signup/SignUp';
+import LoginFromPlatform from './components/login/LoginFromPlatform';
 import { logInUser } from './actions/actions';
 
 //Import from Material UI
@@ -50,6 +51,13 @@ class Application extends Component {
             <Route
               path='/login'
               component={this.props.isLoggedIn ? redirectUser : Login}
+              exact
+            />
+            <Route
+              path='/login/api'
+              component={
+                this.props.isLoggedIn ? redirectUser : LoginFromPlatform
+              }
               exact
             />
             <Route

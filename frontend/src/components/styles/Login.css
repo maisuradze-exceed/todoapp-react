@@ -1,0 +1,33 @@
+.paper {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.socialbtns {
+  text-decoration: none;
+  width: 407px;
+  margin: 0 !important;
+  margin-top: 4px !important;
+  margin-left: 3px !important;
+  height: 35px !important;
+}
+
+.socialbtns > div > div:last-child {
+  margin-left: 80px !important;
+}
+
+.socialbtns:first-of-type {
+  margin-top: 2px !important;
+}
+
+.socialbtns:last-of-type {
+  margin-bottom: 5px !important;
+}
+
+@media only screen and (max-width: 446px) {
+  .MuiButton-label {
+    font-size: 1rem;
+  }
+}
