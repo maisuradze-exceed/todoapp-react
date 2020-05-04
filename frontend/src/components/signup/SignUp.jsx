@@ -1,18 +1,16 @@
 // Import from libraries
 import React, { Component } from 'react';
+import axios from 'axios';
+import jwtDecode from 'jwt-decode';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom/';
-import axios from 'axios';
-import jwtDecode from 'jwt-decode';
 import {
   FacebookLoginButton,
   GithubLoginButton,
   GoogleLoginButton,
 } from 'react-social-login-buttons';
-
-// Import from redux
-import { logInUser } from '../../actions/actions';
 
 // Material UI and Styles
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -28,43 +26,49 @@ import {
 import Alert from '@material-ui/lab/Alert/Alert';
 import '../styles/Login.css';
 
-export class SignUp extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+// Import from redux
+import { logInUser } from '../../actions/actions';
+
+class SignUp extends Component {
+    state = {
       email: '',
       password: '',
       confirmPassword: '',
       error: false,
       errorMessage: '',
-    };
-  }
+    }
 
   handleEmailChange = (event) => {
     this.setState({
-      ...this.state,
       email: event.target.value,
     });
   };
 
   handlePassChange = (event) => {
     this.setState({
-      ...this.state,
       password: event.target.value,
     });
   };
 
   handleConfPassChange = (event) => {
     this.setState({
-      ...this.state,
       confirmPassword: event.target.value,
     });
   };
 
   handleSubmit = (event) => {
+    const clear = () => {
+      this.setState({
+        email: '',
+        password: '',
+        confirmPassword: '',
+        error: true,
+        errorMessage: 'Email already exists',
+      });
+    };
     event.preventDefault();
+    const { actions: { logInUser } } = this.props;
     const { password, confirmPassword, email } = this.state;
-    const { logInUser } = this.props.actions;
 
     if (password === confirmPassword) {
       const userData = {
@@ -73,42 +77,31 @@ export class SignUp extends Component {
       };
       axios
         .post('https://exceed-react.herokuapp.com/api/auth/register', userData)
-        .then(() =>
-          axios
-            .post('https://exceed-react.herokuapp.com/api/auth/login', userData)
-            .then((res) => {
-              localStorage.setItem('auth-token', `${res.data}`);
-              axios.defaults.headers.common['auth-token'] = res.data;
-            })
-            .then(() => {
-              const token = localStorage.getItem('auth-token');
-              const decodedToken = jwtDecode(token);
-              logInUser({
-                token,
-                decodedToken,
-              });
-            })
-        )
-        .catch(() =>
-          this.setState({
-            email: '',
-            password: '',
-            confirmPassword: '',
-            error: true,
-            errorMessage: `Email already exists`,
+        // Change This code
+        .then(() => axios
+          .post('https://exceed-react.herokuapp.com/api/auth/login', userData)
+          .then((res) => {
+            localStorage.setItem('auth-token', `${res.data}`);
+            axios.defaults.headers.common['auth-token'] = res.data;
           })
-        );
+          .then(() => {
+            const token = localStorage.getItem('auth-token');
+            const decodedToken = jwtDecode(token);
+            logInUser({
+              token,
+              decodedToken,
+            });
+          }))
+        .catch(() => clear());
     } else {
-      this.setState({
-        ...this.state,
-        password: '',
-        confirmPassword: '',
-        error: true,
-        errorMessage: `Passwords didn't match`,
-      });
+      clear();
     }
   };
+
   render() {
+    const {
+      error, errorMessage, email, password, confirmPassword,
+    } = this.state;
     return (
       <Container component='main' maxWidth='xs'>
         <CssBaseline />
@@ -137,8 +130,8 @@ export class SignUp extends Component {
           >
             <GoogleLoginButton className='socialbtns' />
           </a>
-          {this.state.error ? (
-            <Alert severity='error'>{this.state.errorMessage}</Alert>
+          {error ? (
+            <Alert severity='error'>{errorMessage}</Alert>
           ) : null}
           <form className='form' onSubmit={this.handleSubmit}>
             <TextField
@@ -151,7 +144,7 @@ export class SignUp extends Component {
               name='email'
               autoComplete='email'
               autoFocus
-              value={this.state.email}
+              value={email}
               onChange={this.handleEmailChange}
             />
             <TextField
@@ -163,7 +156,7 @@ export class SignUp extends Component {
               label='Password'
               type='password'
               id='password'
-              value={this.state.password}
+              value={password}
               onChange={this.handlePassChange}
               inputProps={{ minLength: 6 }}
             />
@@ -176,7 +169,7 @@ export class SignUp extends Component {
               label='Repeat Password'
               type='password'
               id='repeatPassword'
-              value={this.state.confirmPassword}
+              value={confirmPassword}
               onChange={this.handleConfPassChange}
               inputProps={{ minLength: 6 }}
             />
@@ -193,7 +186,7 @@ export class SignUp extends Component {
           <Grid container>
             <Grid item>
               <Link to='/login' variant='body2'>
-                {'Already have an account? Sign in'}
+                Already have an account? Sign in
               </Link>
             </Grid>
           </Grid>
@@ -203,10 +196,12 @@ export class SignUp extends Component {
   }
 }
 
-const matchDispatchToProps = (dispatch) => {
-  return {
-    actions: bindActionCreators({ logInUser }, dispatch),
-  };
+SignUp.propTypes = {
+  actions: propTypes.objectOf(propTypes.func).isRequired,
 };
+
+const matchDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ logInUser }, dispatch),
+});
 
 export default connect(null, matchDispatchToProps)(SignUp);

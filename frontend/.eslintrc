@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true
+  },
+  "extends": "airbnb",
+  "plugins": ["react", "jsx-a11y", "import"],
+  "parser": "babel-eslint",
+  "rules": {
+    "linebreak-style": "off",
+    "react/prefer-stateless-function": "off",
+    "react/state-in-constructor": "off",
+    "no-shadow": "off",
+    "prefer-double": "off",
+    "jsx-quotes": [2, "prefer-single"],
+    "no-underscore-dangle": "off",
+    "no-tabs": "off",
+    "no-mixed-spaces-and-tabs": "off",
+    "no-plusplus": "off",
+    "react/jsx-filename-extension": "off"
+  }
+}

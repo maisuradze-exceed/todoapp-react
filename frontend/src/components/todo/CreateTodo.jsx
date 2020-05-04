@@ -1,15 +1,15 @@
 // Import from libraries
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import propTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+
+// Material UI
+import { TextField, Button } from '@material-ui/core';
 
 // Import from redux
 import { addTodo } from '../../actions/services';
 import { getTodos, changePage } from '../../actions/actions';
-
-// Material UI
-import { TextField, Button } from '@material-ui/core';
 
 class CreateTodo extends Component {
   state = {
@@ -31,7 +31,8 @@ class CreateTodo extends Component {
       user,
       actions: { getTodos, changePage },
     } = this.props;
-    const post = this.state.value.trim();
+    const { value } = this.state;
+    const post = value.trim();
     const clear = () => this.setState({ value: '' });
     if (currentItems.length === 10) {
       if (post.length) {
@@ -40,15 +41,16 @@ class CreateTodo extends Component {
           .then(changePage(currentPage + 1))
           .then(clear());
       }
+    } else if (post.length) {
+      addTodo(post, token, user).then((res) => getTodos(res, user));
     } else {
-      post.length
-        ? addTodo(post, token, user).then((res) => getTodos(res, user))
-        : clear();
+      clear();
     }
     clear();
   };
 
   render() {
+    const { value } = this.state;
     return (
       <div>
         <form id='form' onSubmit={this.handleSubmit}>
@@ -59,7 +61,7 @@ class CreateTodo extends Component {
             size='small'
             autoComplete='off'
             inputProps={{ maxLength: 30 }}
-            value={this.state.value}
+            value={value}
             onChange={this.onChange}
             required
           />
@@ -78,10 +80,11 @@ class CreateTodo extends Component {
 }
 
 CreateTodo.propTypes = {
-  todos: propTypes.array.isRequired,
   currentPage: propTypes.number.isRequired,
-  currentItems: propTypes.array.isRequired,
-  actions: propTypes.object.isRequired,
+  currentItems: propTypes.arrayOf(propTypes.object).isRequired,
+  actions: propTypes.objectOf(propTypes.func).isRequired,
+  token: propTypes.string.isRequired,
+  user: propTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -91,10 +94,8 @@ const mapStateToProps = (state) => ({
   user: state.user.user,
 });
 
-const matchDispatchToProps = (dispatch) => {
-  return {
-    actions: bindActionCreators({ getTodos, changePage }, dispatch),
-  };
-};
+const matchDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ getTodos, changePage }, dispatch),
+});
 
 export default connect(mapStateToProps, matchDispatchToProps)(CreateTodo);

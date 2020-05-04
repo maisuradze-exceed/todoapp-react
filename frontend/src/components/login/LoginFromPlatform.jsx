@@ -1,18 +1,25 @@
+// Import from libraries
 import React, { useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
+import axios from 'axios';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { logInUser } from '../../actions/actions';
-import { CircularProgress } from '@material-ui/core';
+
+// Import from Material UI
 import Alert from '@material-ui/lab/Alert/Alert';
-import axios from 'axios';
+import { CircularProgress } from '@material-ui/core';
+
+// Import from Redux
+import { logInUser } from '../../actions/actions';
+
 
 const LoginFromPlatform = (props) => {
   useEffect(() => {
     const { logInUser } = props.actions;
     axios
       .get(
-        'http://exceed-react.herokuapp.com/api/otherlogin/auth/complete/redirect=success/redirecting'
+        'http://exceed-react.herokuapp.com/api/otherlogin/auth/complete/redirect=success/redirecting',
       )
       .then((res) => {
         localStorage.setItem('auth-token', `${res.data}`);
@@ -45,10 +52,12 @@ const LoginFromPlatform = (props) => {
   );
 };
 
-const matchDispatchToProps = (dispatch) => {
-  return {
-    actions: bindActionCreators({ logInUser }, dispatch),
-  };
+LoginFromPlatform.propTypes = {
+  actions: propTypes.objectOf(propTypes.func).isRequired,
 };
+
+const matchDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ logInUser }, dispatch),
+});
 
 export default connect(null, matchDispatchToProps)(LoginFromPlatform);

@@ -4,10 +4,6 @@ import propTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-// Import from redux
-import { getTodos } from '../../actions/actions';
-import { editTodo } from '../../actions/services';
-
 // Material UI
 import {
   TextField,
@@ -18,17 +14,26 @@ import {
 } from '@material-ui/core/';
 import Edit from '@material-ui/icons/Edit';
 
+// Import from redux
+import { getTodos } from '../../actions/actions';
+import { editTodo } from '../../actions/services';
+
 class FormDialog extends Component {
-  state = {
-    newValue: this.props.edit,
-    open: false,
-  };
+  constructor(props) {
+    super(props);
+    const { edit } = this.props;
+    this.state = {
+      newValue: edit,
+      open: false,
+    };
+  }
 
   handleClick = () => {
+    const { open } = this.state;
     const { edit } = this.props;
     this.setState({
       newValue: edit,
-      open: !this.state.open,
+      open: !open,
     });
   };
 
@@ -45,22 +50,24 @@ class FormDialog extends Component {
       user,
       actions: { getTodos },
     } = this.props;
-    const close = () =>
-      this.setState({
-        open: false,
-      });
+    const { newValue } = this.state;
+    const close = () => this.setState({
+      open: false,
+    });
     const data = {
-      newValue: this.state.newValue,
-      id: id,
+      newValue,
+      id,
     };
-    if (this.state.newValue.trim()) {
+    if (newValue.trim()) {
       editTodo(data, token, user).then((res) => getTodos(res, user));
       close();
     } else {
       close();
     }
   };
+
   render() {
+    const { open, newValue } = this.state;
     return (
       <div>
         <Button
@@ -75,7 +82,7 @@ class FormDialog extends Component {
         </Button>
         <Dialog
           aria-labelledby='form-dialog-title'
-          open={this.state.open}
+          open={open}
           onClose={this.handleClick}
         >
           <DialogContent>
@@ -87,7 +94,7 @@ class FormDialog extends Component {
               inputProps={{ maxLength: 30 }}
               autoComplete='off'
               fullWidth
-              value={this.state.newValue}
+              value={newValue}
               onChange={this.handleChange}
             />
           </DialogContent>
@@ -103,9 +110,11 @@ class FormDialog extends Component {
 }
 
 FormDialog.propTypes = {
-  actions: propTypes.object.isRequired,
+  actions: propTypes.objectOf(propTypes.func).isRequired,
   edit: propTypes.string.isRequired,
   id: propTypes.string.isRequired,
+  token: propTypes.string.isRequired,
+  user: propTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -113,10 +122,8 @@ const mapStateToProps = (state) => ({
   user: state.user.user,
 });
 
-const matchDispatchToProps = (dispatch) => {
-  return {
-    actions: bindActionCreators({ getTodos }, dispatch),
-  };
-};
+const matchDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ getTodos }, dispatch),
+});
 
 export default connect(mapStateToProps, matchDispatchToProps)(FormDialog);

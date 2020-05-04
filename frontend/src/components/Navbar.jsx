@@ -1,20 +1,23 @@
 // Import from libraries
-import React from 'react';
+import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import propTypes from 'prop-types';
+
+// Material UI and styles
+import {
+  AppBar, Toolbar, Typography, Button,
+} from '@material-ui/core';
+import { AssignmentTurnedIn } from '@material-ui/icons/';
+import './styles/Navbar.css';
 
 // Import from redux
 import { logOut } from '../actions/actions';
 
-// Material UI and styles
-import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
-import { AssignmentTurnedIn } from '@material-ui/icons/';
-import './styles/Navbar.css';
-
-class Navbar extends React.Component {
+class Navbar extends Component {
   render() {
-    const { logOut } = this.props.actions;
+    const { isLoggedIn, actions: { logOut } } = this.props;
     const style = {
       color: 'white',
     };
@@ -67,21 +70,25 @@ class Navbar extends React.Component {
               Task App
             </Typography>
           </div>
-          {this.props.isLoggedIn ? authenticated : unAuthenticated}
+          {isLoggedIn ? authenticated : unAuthenticated}
         </Toolbar>
       </AppBar>
     );
   }
 }
 
+
+Navbar.propTypes = {
+  isLoggedIn: propTypes.bool.isRequired,
+  actions: propTypes.objectOf(propTypes.func).isRequired,
+};
+
 const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
 });
 
-const matchDispatchToProps = (dispatch) => {
-  return {
-    actions: bindActionCreators({ logOut }, dispatch),
-  };
-};
+const matchDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ logOut }, dispatch),
+});
 
 export default connect(mapStateToProps, matchDispatchToProps)(Navbar);

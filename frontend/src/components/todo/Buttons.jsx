@@ -1,10 +1,11 @@
 // Import from libraries
 import React, { Component } from 'react';
+import propTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import propTypes from 'prop-types';
 
 // Import from Components
+import { Button } from '@material-ui/core';
 import Pagination from './Pagination';
 
 // Import from redux
@@ -16,7 +17,6 @@ import {
 } from '../../actions/services';
 
 // Material UI
-import { Button } from '@material-ui/core';
 
 class Buttons extends Component {
   handleRemove = () => {
@@ -70,6 +70,7 @@ class Buttons extends Component {
     });
     uncompleteAllTodo(ids, token, user).then((res) => getTodos(res));
   };
+
   render() {
     const { todos, todo, checkItems } = this.props;
 
@@ -127,11 +128,13 @@ class Buttons extends Component {
 }
 
 Buttons.propTypes = {
-  todos: propTypes.array.isRequired,
+  todos: propTypes.arrayOf(propTypes.object).isRequired,
   todo: propTypes.bool.isRequired,
-  currentItems: propTypes.array.isRequired,
-  actions: propTypes.object.isRequired,
+  currentItems: propTypes.arrayOf(propTypes.object).isRequired,
+  actions: propTypes.objectOf(propTypes.func).isRequired,
   checkItems: propTypes.bool.isRequired,
+  token: propTypes.string.isRequired,
+  user: propTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -140,10 +143,8 @@ const mapStateToProps = (state) => ({
   user: state.user.user,
 });
 
-const matchDispatchToProps = (dispatch) => {
-  return {
-    actions: bindActionCreators({ getTodos, changePage }, dispatch),
-  };
-};
+const matchDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ getTodos, changePage }, dispatch),
+});
 
 export default connect(mapStateToProps, matchDispatchToProps)(Buttons);

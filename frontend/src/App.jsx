@@ -9,8 +9,12 @@ import {
 } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import { bindActionCreators } from 'redux';
+import propTypes from 'prop-types';
 
-//Import from components
+// Import from Material UI
+import { Container } from '@material-ui/core';
+
+// Import from components
 import TodoPage from './components/todo/TodoPage';
 import Navbar from './components/Navbar';
 import Login from './components/login/Login';
@@ -18,13 +22,13 @@ import SignUp from './components/signup/SignUp';
 import LoginFromPlatform from './components/login/LoginFromPlatform';
 import { logInUser } from './actions/actions';
 
-//Import from Material UI
-import { Container } from '@material-ui/core';
-
 class Application extends Component {
   render() {
+    const {
+      isLoggedIn,
+      actions: { logInUser },
+    } = this.props;
     const token = localStorage.getItem('auth-token');
-    const { logInUser } = this.props.actions;
     if (token) {
       const decodedToken = jwtDecode(token);
       if (decodedToken.exp * 1000 < Date.now()) {
@@ -45,24 +49,22 @@ class Application extends Component {
           <Switch>
             <Route
               path='/'
-              component={this.props.isLoggedIn ? TodoPage : redirectNotUser}
+              component={isLoggedIn ? TodoPage : redirectNotUser}
               exact
             />
             <Route
               path='/login'
-              component={this.props.isLoggedIn ? redirectUser : Login}
+              component={isLoggedIn ? redirectUser : Login}
               exact
             />
             <Route
               path='/login/api'
-              component={
-                this.props.isLoggedIn ? redirectUser : LoginFromPlatform
-              }
+              component={isLoggedIn ? redirectUser : LoginFromPlatform}
               exact
             />
             <Route
               path='/signup'
-              component={this.props.isLoggedIn ? redirectUser : SignUp}
+              component={isLoggedIn ? redirectUser : SignUp}
               exact
             />
           </Switch>
@@ -72,14 +74,17 @@ class Application extends Component {
   }
 }
 
+Application.propTypes = {
+  isLoggedIn: propTypes.bool.isRequired,
+  actions: propTypes.objectOf(propTypes.func).isRequired,
+};
+
 const mapStateToProps = (state) => ({
   isLoggedIn: state.user.isLoggedIn,
 });
 
-const matchDispatchToProps = (dispatch) => {
-  return {
-    actions: bindActionCreators({ logInUser }, dispatch),
-  };
-};
+const matchDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ logInUser }, dispatch),
+});
 
 export default connect(mapStateToProps, matchDispatchToProps)(Application);

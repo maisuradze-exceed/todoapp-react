@@ -13,13 +13,12 @@ import TodoItems from './TodoItems';
 
 class Todo extends Component {
   componentDidMount = () => {
-    if (this.props.isLoggedIn) {
-      const {
-        actions: { getTodos },
-        token,
-      } = this.props;
-      fetchTodos(token).then((res) => getTodos(res));
-    }
+    const {
+      actions: { getTodos },
+      isLoggedIn,
+      token,
+    } = this.props;
+    if (isLoggedIn) fetchTodos(token).then((res) => getTodos(res));
   };
 
   handleCheck = (event, id) => {
@@ -71,10 +70,13 @@ class Todo extends Component {
 }
 
 Todo.propTypes = {
-  todos: propTypes.array.isRequired,
+  todos: propTypes.arrayOf(propTypes.oneOfType([propTypes.object])).isRequired,
   currentPage: propTypes.number.isRequired,
-  currentItems: propTypes.array.isRequired,
-  actions: propTypes.object.isRequired,
+  currentItems: propTypes.arrayOf(propTypes.oneOfType([propTypes.object])).isRequired,
+  actions: propTypes.objectOf(propTypes.func).isRequired,
+  token: propTypes.string.isRequired,
+  isLoggedIn: propTypes.bool.isRequired,
+  user: propTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -85,10 +87,8 @@ const mapStateToProps = (state) => ({
   user: state.user.user,
 });
 
-const matchDispatchToProps = (dispatch) => {
-  return {
-    actions: bindActionCreators({ getTodos, changePage }, dispatch),
-  };
-};
+const matchDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators({ getTodos, changePage }, dispatch),
+});
 
 export default connect(mapStateToProps, matchDispatchToProps)(Todo);
