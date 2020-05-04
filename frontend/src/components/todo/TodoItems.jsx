@@ -45,7 +45,13 @@ class TodoItems extends Component {
 
 TodoItems.propTypes = {
   check: propTypes.func.isRequired,
-  data: propTypes.arrayOf(propTypes.oneOfType([propTypes.object])).isRequired,
+  data: propTypes.arrayOf(propTypes.objectOf({
+    _id: propTypes.string,
+    isCompleted: propTypes.bool,
+    value: propTypes.string,
+    user: propTypes.string,
+    _v: propTypes.number,
+  })).isRequired,
   del: propTypes.func.isRequired,
 };
 

@@ -110,7 +110,9 @@ class FormDialog extends Component {
 }
 
 FormDialog.propTypes = {
-  actions: propTypes.objectOf(propTypes.func).isRequired,
+  actions: propTypes.objectOf({
+    getTodos: propTypes.func,
+  }).isRequired,
   edit: propTypes.string.isRequired,
   id: propTypes.string.isRequired,
   token: propTypes.string.isRequired,

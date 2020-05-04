@@ -80,7 +80,13 @@ Todo.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  todos: state.todos.items,
+  todos: propTypes.arrayOf(propTypes.objectOf({
+    _id: propTypes.string,
+    isCompleted: propTypes.bool,
+    value: propTypes.string,
+    user: propTypes.string,
+    _v: propTypes.number,
+  })).isRequired,
   currentPage: state.todos.currentPage,
   isLoggedIn: state.user.isLoggedIn,
   token: state.user.token,

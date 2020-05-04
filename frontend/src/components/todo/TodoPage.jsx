@@ -37,7 +37,13 @@ class TodoPage extends Component {
 }
 
 TodoPage.propTypes = {
-  todos: propTypes.arrayOf(propTypes.oneOfType([propTypes.object])).isRequired,
+  todos: propTypes.arrayOf(propTypes.objectOf({
+    _id: propTypes.string,
+    isCompleted: propTypes.bool,
+    value: propTypes.string,
+    user: propTypes.string,
+    _v: propTypes.number,
+  })).isRequired,
   currentPage: propTypes.number.isRequired,
   itemsPerPage: propTypes.number.isRequired,
 };

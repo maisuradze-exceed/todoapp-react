@@ -128,10 +128,25 @@ class Buttons extends Component {
 }
 
 Buttons.propTypes = {
-  todos: propTypes.arrayOf(propTypes.object).isRequired,
+  todos: propTypes.arrayOf(propTypes.objectOf({
+    _id: propTypes.string,
+    isCompleted: propTypes.bool,
+    value: propTypes.string,
+    user: propTypes.string,
+    _v: propTypes.number,
+  })).isRequired,
   todo: propTypes.bool.isRequired,
-  currentItems: propTypes.arrayOf(propTypes.object).isRequired,
-  actions: propTypes.objectOf(propTypes.func).isRequired,
+  currentItems: propTypes.arrayOf(propTypes.objectOf({
+    _id: propTypes.string,
+    isCompleted: propTypes.bool,
+    value: propTypes.string,
+    user: propTypes.string,
+    _v: propTypes.number,
+  })).isRequired,
+  actions: propTypes.objectOf({
+    getTodos: propTypes.func,
+    changePage: propTypes.func,
+  }).isRequired,
   checkItems: propTypes.bool.isRequired,
   token: propTypes.string.isRequired,
   user: propTypes.string.isRequired,

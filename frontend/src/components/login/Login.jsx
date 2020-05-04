@@ -167,7 +167,9 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  actions: propTypes.objectOf(propTypes.func).isRequired,
+  actions: propTypes.objectOf({
+    logInUser: propTypes.func,
+  }).isRequired,
 };
 
 const matchDispatchToProps = (dispatch) => ({

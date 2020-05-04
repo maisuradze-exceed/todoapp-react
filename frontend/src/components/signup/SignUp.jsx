@@ -197,7 +197,9 @@ class SignUp extends Component {
 }
 
 SignUp.propTypes = {
-  actions: propTypes.objectOf(propTypes.func).isRequired,
+  actions: propTypes.objectOf({
+    logInUser: propTypes.func,
+  }).isRequired,
 };
 
 const matchDispatchToProps = (dispatch) => ({

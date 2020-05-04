@@ -76,7 +76,9 @@ class Application extends Component {
 
 Application.propTypes = {
   isLoggedIn: propTypes.bool.isRequired,
-  actions: propTypes.objectOf(propTypes.func).isRequired,
+  actions: propTypes.objectOf({
+    logInUser: propTypes.func,
+  }).isRequired,
 };
 
 const mapStateToProps = (state) => ({

@@ -81,8 +81,17 @@ class CreateTodo extends Component {
 
 CreateTodo.propTypes = {
   currentPage: propTypes.number.isRequired,
-  currentItems: propTypes.arrayOf(propTypes.object).isRequired,
-  actions: propTypes.objectOf(propTypes.func).isRequired,
+  currentItems: propTypes.arrayOf(propTypes.objectOf({
+    _id: propTypes.string,
+    isCompleted: propTypes.bool,
+    value: propTypes.string,
+    user: propTypes.string,
+    _v: propTypes.number,
+  })).isRequired,
+  actions: propTypes.objectOf({
+    getTodos: propTypes.func,
+    changePage: propTypes.func,
+  }).isRequired,
   token: propTypes.string.isRequired,
   user: propTypes.string.isRequired,
 };
